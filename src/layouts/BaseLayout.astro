@@ -1,0 +1,137 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE } from '../lib/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  imageAlt?: string;
+  imageWidth?: number;
+  imageHeight?: number;
+  type?: 'website' | 'article';
+  publishedTime?: string;
+  modifiedTime?: string;
+  articleSection?: string;
+  author?: string;
+  tags?: string[];
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description = SITE.description,
+  image = '/images/og-default.jpg',
+  imageAlt = `${SITE.name}：${SITE.tagline}`,
+  imageWidth = 1200,
+  imageHeight = 630,
+  type = 'website',
+  publishedTime,
+  modifiedTime,
+  articleSection,
+  author = '林知远',
+  tags = [],
+  noindex = false,
+} = Astro.props;
+
+const configuredSite = Astro.site ?? new URL('https://hengyuan-research.example.com');
+const canonical = new URL(Astro.url.pathname, configuredSite).toString();
+const ogImage = new URL(image, configuredSite).toString();
+const pageTitle = title ? `${title} · ${SITE.name}` : `${SITE.name}｜资产配置与行业研究`;
+const rssUrl = new URL('/rss.xml', configuredSite).toString();
+const logoUrl = new URL('/favicon.svg', configuredSite).toString();
+
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      '@id': `${configuredSite.origin}/#website`,
+      url: configuredSite.origin,
+      name: SITE.name,
+      alternateName: SITE.english,
+      description: SITE.description,
+      inLanguage: 'zh-CN',
+      publisher: { '@id': `${configuredSite.origin}/#organization` },
+      potentialAction: {
+        '@type': 'SearchAction',
+        target: `${configuredSite.origin}/research/?q={search_term_string}`,
+        'query-input': 'required name=search_term_string',
+      },
+    },
+    {
+      '@type': 'Organization',
+      '@id': `${configuredSite.origin}/#organization`,
+      name: SITE.name,
+      alternateName: SITE.english,
+      url: configuredSite.origin,
+      logo: logoUrl,
+      description: SITE.description,
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#0b1f33" />
+    <meta name="color-scheme" content="light" />
+    {
+      noindex ? (
+        <meta name="robots" content="noindex, nofollow" />
+      ) : (
+        <meta name="robots" content="index, follow, max-image-preview:large" />
+      )
+    }
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate" type="application/rss+xml" title={`${SITE.name} RSS`} href={rssUrl} />
+
+    <!-- Open Graph：文章页由页面传入封面，其余页面使用品牌默认图。 -->
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content={String(imageWidth)} />
+    <meta property="og:image:height" content={String(imageHeight)} />
+    <meta property="og:image:alt" content={imageAlt} />
+    {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+    {modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
+    {articleSection && <meta property="article:section" content={articleSection} />}
+    {type === 'article' && <meta property="article:author" content={author} />}
+    {tags.map((tag) => <meta property="article:tag" content={tag} />)}
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={imageAlt} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
+    <slot name="head" />
+  </head>
+  <body>
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:bg-ink focus:px-5 focus:py-3 focus:text-sm focus:text-paper-soft"
+    >
+      跳到主要内容
+    </a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

@@ -1,0 +1,67 @@
+---
+import type { ArticleEntry } from '../lib/articles';
+import { articleHref } from '../lib/articles';
+import { formatDateShort } from '../lib/format';
+
+interface Props {
+  article: ArticleEntry;
+  loading?: 'eager' | 'lazy';
+}
+
+const { article, loading = 'lazy' } = Astro.props;
+const { title, description, cover, category, tags, readingTime, date, slug } = article.data;
+---
+
+<article class="group flex h-full flex-col">
+  <a href={articleHref(slug)} class="block" tabindex="-1" aria-hidden="true">
+    <div class="overflow-hidden border border-line bg-paper-deep">
+      <img
+        src={cover}
+        alt=""
+        width="1600"
+        height="1000"
+        loading={loading}
+        decoding="async"
+        class="card-image aspect-[8/5] w-full object-cover"
+      />
+    </div>
+  </a>
+
+  <div class="flex flex-1 flex-col pt-5">
+    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.67rem] tracking-[0.08em] text-muted">
+      <span class="font-medium text-accent-deep">{category}</span>
+      <span aria-hidden="true">/</span>
+      <time datetime={date.toISOString()}>{formatDateShort(date)}</time>
+      <span aria-hidden="true">/</span>
+      <span>{readingTime} 分钟阅读</span>
+    </div>
+
+    <h3 class="headline-keep mt-3 font-serif text-[1.4rem] font-semibold leading-[1.45] tracking-[-0.015em] text-ink">
+      <a
+        href={articleHref(slug)}
+        class="transition-colors duration-200 hover:text-accent-deep"
+        aria-label={`阅读《${title}》`}
+      >
+        {title}
+      </a>
+    </h3>
+
+    <p class="mt-3 line-clamp-3 text-sm leading-7 text-muted">{description}</p>
+
+    <div class="mt-auto flex flex-wrap items-center gap-2 pt-5">
+      {tags.slice(0, 2).map((tag) => (
+        <span class="border border-line px-2 py-1 text-[0.62rem] tracking-wide text-muted">
+          #{tag}
+        </span>
+      ))}
+      <a
+        href={articleHref(slug)}
+        class="ml-auto inline-flex items-center gap-1.5 text-[0.68rem] font-semibold tracking-wide text-ink transition-colors hover:text-accent-deep"
+        aria-label={`阅读《${title}》`}
+      >
+        阅读
+        <span aria-hidden="true">↗</span>
+      </a>
+    </div>
+  </div>
+</article>

@@ -1,0 +1,326 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import { AUTHOR, CATEGORIES } from '../lib/site';
+
+const method = [
+  {
+    index: '01',
+    title: '提出问题',
+    en: 'Frame the question',
+    description:
+      '先明确决策问题与时间尺度：是为了配置、交易，还是理解一个行业？问题不清楚，数据越多越容易失焦。',
+  },
+  {
+    index: '02',
+    title: '建立证据链',
+    en: 'Build the evidence',
+    description:
+      '把宏观数据、产业数据与公司报表放在一起交叉验证。区分事实、推断与叙事，并主动寻找反例。',
+  },
+  {
+    index: '03',
+    title: '形成判断',
+    en: 'Form the odds',
+    description:
+      '判断不只包含方向，也包含赔率、时间与仓位。用情景而不是单点预测，表达对不确定性的尊重。',
+  },
+  {
+    index: '04',
+    title: '设定证伪条件',
+    en: 'Define the falsifier',
+    description:
+      '在判断形成时写下什么会推翻它。可被证伪的观点，才有资格进入组合；否则只是信仰。',
+  },
+];
+
+const framework = [
+  {
+    layer: '宏观层',
+    en: 'Macro',
+    question: '我们在周期的什么位置？',
+    evidence: '增长、通胀、利率、流动性与政策方向',
+    output: '风险预算的倾斜程度',
+  },
+  {
+    layer: '中观层',
+    en: 'Industry',
+    question: '利润留在产业链的哪个环节？',
+    evidence: '供需缺口、竞争格局、库存与资本开支',
+    output: '行业与产业链的偏好',
+  },
+  {
+    layer: '微观层',
+    en: 'Company',
+    question: '当前价格隐含了什么假设？',
+    evidence: '商业模式、现金流、资本回报与估值',
+    output: '安全边际与仓位',
+  },
+  {
+    layer: '组合层',
+    en: 'Portfolio',
+    question: '组合能承受多大的错误？',
+    evidence: '相关性、回撤、流动性与再平衡规则',
+    output: '风险约束与执行纪律',
+  },
+];
+
+const principles = [
+  {
+    title: '独立',
+    en: 'Independent',
+    description: '不替任何机构或产品代言。研究结论只对证据负责，不对流量负责。',
+  },
+  {
+    title: '可证伪',
+    en: 'Falsifiable',
+    description: '每个重要判断都尽量附带反例与观察指标，让观点能够被时间和数据检验。',
+  },
+  {
+    title: '风险优先',
+    en: 'Risk first',
+    description: '先讨论可能亏多少、为什么亏，再讨论可能赚多少。回撤预算决定仓位上限。',
+  },
+  {
+    title: '长期主义',
+    en: 'Long-term',
+    description: '关注可持续的现金流与复利，而不是短期叙事带来的情绪波动。',
+  },
+];
+---
+
+<BaseLayout
+  title="关于衡远"
+  description="了解衡远研究的专家背景、研究方法与研究框架：从买方研究到独立笔记，用可验证的框架连接宏观、行业、公司与组合。"
+>
+  <section class="relative overflow-hidden border-b border-line">
+    <div class="hero-grid pointer-events-none absolute inset-0" aria-hidden="true"></div>
+    <div class="shell relative py-12 sm:py-16 lg:py-20">
+      <Breadcrumbs items={[{ label: '首页', href: '/' }, { label: '关于' }]} />
+
+      <div class="mt-10 grid gap-14 lg:grid-cols-[1.2fr_0.8fr] lg:items-center lg:gap-20">
+        <div>
+          <p class="eyebrow">About / 关于衡远</p>
+          <h1 class="display-title mt-5 max-w-3xl text-[clamp(1.9rem,5vw,4.2rem)] text-ink">
+            研究不是预测未来，<br />
+            而是为不确定性<br />
+            准备坐标。
+          </h1>
+          <p class="mt-6 max-w-2xl text-sm leading-8 text-muted sm:text-base">
+            衡远研究是一份独立的投资研究笔记，关注资产配置、行业研究与组合纪律。我们试图把复杂的宏观与产业问题，拆解成普通投资者也能理解、验证和执行的框架。
+          </p>
+          <div class="mt-8 flex flex-wrap gap-3">
+            <a href="/research/" class="btn btn-primary px-6">
+              阅读研究档案
+              <span aria-hidden="true">↗</span>
+            </a>
+            <a href="/subscribe/" class="btn btn-outline px-6">订阅与联系</a>
+          </div>
+        </div>
+
+        <div class="relative mx-auto w-full max-w-sm">
+          <div class="absolute -left-2.5 -top-2.5 hidden h-full w-full border border-accent/45 sm:block" aria-hidden="true"></div>
+          <div class="relative border border-line bg-paper-soft p-2 shadow-[0_28px_70px_-44px_rgba(11,31,51,0.5)]">
+            <div class="relative overflow-hidden bg-ink px-6 pb-6 pt-5 text-paper">
+              <div class="flex items-center justify-between gap-3">
+                <span class="font-mono text-[0.56rem] tracking-[0.16em] text-paper/45">PROFILE / 01</span>
+                <span class="border border-paper/20 px-2 py-0.5 font-mono text-[0.56rem] tracking-widest text-paper/55">
+                  CFA
+                </span>
+              </div>
+              <div class="pointer-events-none absolute -right-3 top-5 select-none font-serif text-[10rem] leading-none text-white/[0.045]" aria-hidden="true">
+                林
+              </div>
+              <div class="relative mt-24">
+                <p class="font-mono text-[0.56rem] tracking-[0.18em] text-accent">{AUTHOR.latin}</p>
+                <p class="mt-2 font-serif text-4xl">{AUTHOR.name}</p>
+                <p class="mt-2 text-xs text-paper/55">{AUTHOR.role} · {AUTHOR.credential}</p>
+              </div>
+            </div>
+            <dl class="grid grid-cols-2 gap-x-4 gap-y-4 p-5">
+              <div>
+                <dt class="rule-label text-muted">Experience</dt>
+                <dd class="mt-1 font-serif text-lg text-ink">12 年</dd>
+                <p class="text-[0.6rem] text-muted">买方研究经验</p>
+              </div>
+              <div>
+                <dt class="rule-label text-muted">Focus</dt>
+                <dd class="mt-1 font-serif text-lg text-ink">多资产</dd>
+                <p class="text-[0.6rem] text-muted">配置与行业比较</p>
+              </div>
+              <div>
+                <dt class="rule-label text-muted">Themes</dt>
+                <dd class="mt-1 font-serif text-lg text-ink">{CATEGORIES.length}</dd>
+                <p class="text-[0.6rem] text-muted">个研究方向</p>
+              </div>
+              <div>
+                <dt class="rule-label text-muted">Principle</dt>
+                <dd class="mt-1 font-serif text-lg text-ink">风险优先</dd>
+                <p class="text-[0.6rem] text-muted">先定义约束</p>
+              </div>
+            </dl>
+          </div>
+          <p class="mt-3 text-center text-[0.6rem] text-muted">人物档案为产品演示设定，不代表真实个人。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="shell py-20 lg:py-28" aria-labelledby="background-heading">
+    <div class="grid gap-12 lg:grid-cols-12 lg:gap-16">
+      <div class="lg:col-span-4 lg:sticky lg:top-28 lg:self-start">
+        <p class="eyebrow">Background / 专家背景</p>
+        <h2 id="background-heading" class="display-title mt-4 text-3xl text-ink sm:text-4xl">
+          买方训练，<br />独立表达。
+        </h2>
+        <div class="mt-7 border-l-2 border-accent pl-5">
+          <p class="font-serif text-lg leading-8 text-ink/80">
+            “先问怎么亏，再问怎么赚。研究的第一步，是承认自己可能错。”
+          </p>
+        </div>
+      </div>
+
+      <div class="lg:col-span-8">
+        <p class="font-serif text-xl leading-9 text-ink sm:text-2xl sm:leading-10">
+          十二年买方研究经历，从多资产配置到科技与高端制造，做过宏观判断，也拆过一张张财报。
+        </p>
+        <div class="mt-6 space-y-5 text-sm leading-8 text-muted">
+          <p>{AUTHOR.longBio}</p>
+          <p>
+            离开机构的统一模板之后，我希望保留三件事：对数据的耐心、对反例的诚实，以及对普通投资者真实约束的理解。衡远研究不是荐股平台，也不销售任何产品；它是一份可以反复翻阅的研究笔记。
+          </p>
+          <p>
+            这里的文章不追求覆盖所有热点，而是围绕少数重要问题持续积累：资产如何定价、产业利润如何迁移、组合如何在压力下保持可执行。
+          </p>
+        </div>
+
+        <div class="mt-9 grid gap-5 border-y border-line py-6 sm:grid-cols-2">
+          <div>
+            <p class="rule-label text-muted">研究覆盖</p>
+            <p class="mt-2 text-sm leading-7 text-ink">多资产配置 · 科技与高端制造 · 公司质量</p>
+          </div>
+          <div>
+            <p class="rule-label text-muted">方法偏好</p>
+            <p class="mt-2 text-sm leading-7 text-ink">证据链 · 情景思维 · 风险预算 · 可证伪</p>
+          </div>
+        </div>
+
+        <div class="mt-7">
+          <p class="rule-label text-muted">Areas of focus / 关注领域</p>
+          <div class="mt-3 flex flex-wrap gap-2">
+            {['资产配置', '行业比较', '科技产业', '公司现金流', '风险预算', '行为金融'].map((item) => (
+              <span class="border border-line bg-paper-soft px-3 py-1.5 text-xs text-muted">{item}</span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="border-y border-line bg-paper-soft" aria-labelledby="method-heading">
+    <div class="shell py-20 lg:py-28">
+      <SectionHeading
+        id="method-heading"
+        eyebrow="Method / 研究方法"
+        title="从问题到证伪，一套克制的分析顺序"
+        description="研究不是把观点说得更确定，而是让判断变得更可以被检验。以下四步贯穿站内所有文章。"
+      />
+
+      <ol class="mt-12 grid gap-x-7 gap-y-9 sm:grid-cols-2 lg:grid-cols-4">
+        {method.map((item) => (
+          <li class="border-t border-line-dark pt-6">
+            <div class="flex items-baseline justify-between gap-3">
+              <span class="font-mono text-xs text-accent-deep">{item.index}</span>
+              <span class="font-mono text-[0.55rem] uppercase tracking-[0.14em] text-muted">{item.en}</span>
+            </div>
+            <h3 class="mt-5 font-serif text-xl text-ink">{item.title}</h3>
+            <p class="mt-3 text-sm leading-7 text-muted">{item.description}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="shell py-20 lg:py-28" aria-labelledby="framework-heading">
+    <SectionHeading
+      id="framework-heading"
+      eyebrow="Framework / 研究框架"
+      title="四层框架，把观点落到组合"
+      description="宏观决定风往哪里吹，中观决定利润在哪里，微观决定价格是否合理，组合层决定你能否承受判断错误。"
+    />
+
+    <div class="mt-11 overflow-x-auto border border-line bg-paper-soft">
+      <table class="w-full min-w-[780px] text-left text-sm">
+        <caption class="sr-only">衡远研究四层研究框架</caption>
+        <thead>
+          <tr class="bg-ink text-paper">
+            <th scope="col" class="px-5 py-4 text-[0.65rem] font-medium tracking-[0.08em] text-paper/55">层级</th>
+            <th scope="col" class="px-5 py-4 text-[0.65rem] font-medium tracking-[0.08em] text-paper/55">核心问题</th>
+            <th scope="col" class="px-5 py-4 text-[0.65rem] font-medium tracking-[0.08em] text-paper/55">主要证据</th>
+            <th scope="col" class="px-5 py-4 text-[0.65rem] font-medium tracking-[0.08em] text-paper/55">组合输出</th>
+          </tr>
+        </thead>
+        <tbody>
+          {framework.map((row) => (
+            <tr class="border-t border-line first:border-t-0">
+              <th scope="row" class="px-5 py-6 align-top">
+                <span class="block font-serif text-lg font-medium text-ink">{row.layer}</span>
+                <span class="mt-1 block font-mono text-[0.56rem] uppercase tracking-[0.12em] text-muted">{row.en}</span>
+              </th>
+              <td class="px-5 py-6 align-top text-sm font-medium leading-7 text-ink">{row.question}</td>
+              <td class="px-5 py-6 align-top text-xs leading-6 text-muted">{row.evidence}</td>
+              <td class="px-5 py-6 align-top text-xs leading-6 text-accent-deep">{row.output}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <p class="mt-4 text-[0.68rem] leading-6 text-muted">
+      框架用于组织问题，不保证预测正确。每一层都可能被新的数据推翻；组合的职责，是让错误发生时仍然可承受。
+    </p>
+  </section>
+
+  <section class="border-y border-line bg-paper-deep/45" aria-labelledby="principles-heading">
+    <div class="shell py-20 lg:py-24">
+      <div class="grid gap-10 lg:grid-cols-[0.65fr_1.35fr] lg:gap-16">
+        <div>
+          <p class="eyebrow">Principles / 研究原则</p>
+          <h2 id="principles-heading" class="display-title mt-4 text-3xl text-ink sm:text-4xl">
+            四条不能妥协的边界
+          </h2>
+        </div>
+        <div class="grid border-l border-t border-line sm:grid-cols-2">
+          {principles.map((item, index) => (
+            <article class="border-b border-r border-line p-6 sm:p-7">
+              <div class="flex items-baseline justify-between gap-3">
+                <h3 class="font-serif text-2xl text-ink">{item.title}</h3>
+                <span class="font-mono text-[0.56rem] uppercase tracking-[0.13em] text-muted">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+              </div>
+              <p class="mt-1 font-mono text-[0.56rem] uppercase tracking-[0.13em] text-accent-deep">{item.en}</p>
+              <p class="mt-4 text-sm leading-7 text-muted">{item.description}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="shell py-16">
+    <div class="flex flex-col justify-between gap-7 border border-line-dark bg-paper-deep px-7 py-9 sm:flex-row sm:items-center sm:px-10">
+      <div>
+        <p class="eyebrow">Start here</p>
+        <h2 class="display-title mt-3 text-2xl sm:text-3xl">从一篇研究，开始建立自己的坐标。</h2>
+      </div>
+      <div class="flex flex-wrap gap-3">
+        <a href="/research/" class="btn btn-primary">浏览研究</a>
+        <a href="/tools/" class="btn btn-outline">使用工具</a>
+      </div>
+    </div>
+    <p class="mt-5 max-w-3xl text-[0.64rem] leading-5 text-muted">
+      说明：本页人物背景、经历与机构关系均为产品演示设定；站内研究内容亦为示例，不构成任何投资建议。
+    </p>
+  </section>
+</BaseLayout>

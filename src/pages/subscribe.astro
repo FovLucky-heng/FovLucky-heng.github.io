@@ -1,0 +1,125 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import SubscribeForm from '../components/SubscribeForm';
+import { SITE } from '../lib/site';
+
+const faqs = [
+  {
+    question: '提交后真的会收到邮件吗？',
+    answer:
+      '不会。当前版本是纯前端 MVP，提交按钮只触发前端校验与模拟成功状态，不会发送任何网络请求，也没有邮件列表。',
+  },
+  {
+    question: '我的姓名和邮箱会被保存在哪里？',
+    answer:
+      '不会被保存。表单数据只存在于当前页面的 React 内存中，刷新即清除；我们没有后端、数据库或第三方表单服务。',
+  },
+  {
+    question: '研究更新频率如何？',
+    answer:
+      '没有固定的更新承诺。研究以问题为导向，有值得写的证据与结论时更新，不为了频率制造内容。当前站内共有 12 篇示例研究。',
+  },
+];
+---
+
+<BaseLayout
+  title="订阅与联系"
+  description="留下你的研究兴趣方向，获取衡远研究的更新意向登记。当前为纯前端演示表单：姓名、邮箱与兴趣方向均在浏览器内校验，不会发送或存储。"
+>
+  <section class="relative overflow-hidden border-b border-line">
+    <div class="hero-grid pointer-events-none absolute inset-0" aria-hidden="true"></div>
+    <div class="shell relative py-12 sm:py-16">
+      <Breadcrumbs items={[{ label: '首页', href: '/' }, { label: '订阅与联系' }]} />
+
+      <div class="mt-9 grid gap-9 lg:grid-cols-[1.25fr_0.75fr] lg:items-end">
+        <div>
+          <p class="eyebrow">Subscribe / 订阅与联系</p>
+          <h1 class="display-title mt-5 max-w-3xl text-[clamp(1.7rem,5.5vw,4.5rem)] text-ink">
+            <span class="block">留下你的研究方向，</span>
+            <span class="block">让下一次更新找到你。</span>
+          </h1>
+          <p class="mt-5 max-w-2xl text-sm leading-8 text-muted sm:text-base">
+            这不是一个要求你留下联系方式才能阅读的网站。所有研究始终免费开放；订阅只是一种可选的更新意向登记。
+          </p>
+        </div>
+
+        <div class="border-l-2 border-accent pl-5">
+          <p class="rule-label text-accent-deep">Demo mode / 演示模式</p>
+          <p class="mt-3 text-sm leading-7 text-muted">
+            当前表单只做前端校验和模拟提交。不会发送邮件，也不会把信息写入任何服务器。
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="shell py-12 sm:py-16" aria-labelledby="subscribe-form-heading">
+    <div class="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
+      <div>
+        <p class="eyebrow">What to expect / 内容说明</p>
+        <h2 id="subscribe-form-heading" class="display-title mt-4 text-3xl text-ink">
+          少一点噪音，<br />多一点可验证的思考。
+        </h2>
+
+        <ol class="mt-8 border-t border-line">
+          {[
+            ['01', '新的研究笔记', '围绕资产配置、行业与组合纪律的长文，不定期更新。'],
+            ['02', '框架与工具更新', '计算器、观察清单或研究方法的迭代。'],
+            ['03', '假设复盘', '当旧判断被新证据推翻时，公开说明哪里错了。'],
+          ].map(([index, title, description]) => (
+            <li class="grid grid-cols-[2rem_1fr] gap-4 border-b border-line py-5">
+              <span class="font-mono text-[0.65rem] text-accent-deep">{index}</span>
+              <div>
+                <h3 class="text-sm font-semibold text-ink">{title}</h3>
+                <p class="mt-1 text-xs leading-6 text-muted">{description}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+
+        <div class="mt-7 bg-paper-deep/60 p-5">
+          <p class="rule-label text-muted">Our promise / 边界</p>
+          <ul class="mt-3 space-y-2 text-xs leading-6 text-muted">
+            <li class="flex gap-2"><span class="text-accent-deep">—</span>不出售或转交联系信息。</li>
+            <li class="flex gap-2"><span class="text-accent-deep">—</span>不发送荐股、产品推销或市场喊单。</li>
+            <li class="flex gap-2"><span class="text-accent-deep">—</span>不要求登录，不设置付费墙。</li>
+          </ul>
+        </div>
+
+        <div class="mt-8">
+          <p class="rule-label text-muted">FAQ / 常见问题</p>
+          <div class="mt-3 border-t border-line">
+            {faqs.map((faq) => (
+              <details class="group border-b border-line py-4">
+                <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-sm font-medium text-ink [&::-webkit-details-marker]:hidden">
+                  {faq.question}
+                  <span class="text-lg font-light text-muted transition-transform duration-200 group-open:rotate-45" aria-hidden="true">＋</span>
+                </summary>
+                <p class="mt-3 pr-8 text-xs leading-6 text-muted">{faq.answer}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+
+        <div class="mt-8 border-t border-line pt-5">
+          <p class="rule-label text-muted">Contact / 联系</p>
+          <p class="mt-3 text-sm text-ink">研究交流与合作</p>
+          <p class="mt-1 font-mono text-xs text-muted">{SITE.demoEmail}</p>
+          <p class="mt-2 text-[0.62rem] leading-5 text-muted">演示邮箱地址，不接收真实邮件。</p>
+        </div>
+      </div>
+
+      <div class="lg:sticky lg:top-28 lg:self-start">
+        <SubscribeForm client:load />
+        <div class="mt-4 flex items-start gap-3 border border-line p-4 text-[0.65rem] leading-5 text-muted">
+          <svg aria-hidden="true" viewBox="0 0 24 24" class="mt-0.5 h-4 w-4 shrink-0 text-accent-deep" fill="none" stroke="currentColor" stroke-width="1.4">
+            <path d="M12 3.5 21 20H3L12 3.5Z" stroke-linejoin="round"></path>
+            <path d="M12 9v5M12 17v.2" stroke-linecap="round"></path>
+          </svg>
+          <p>请勿在演示表单中填写真实敏感信息。若部署为正式站点，请替换为合规的表单服务并补充隐私政策。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

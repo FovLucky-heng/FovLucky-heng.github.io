@@ -1,0 +1,105 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import CalculatorTabs from '../components/CalculatorTabs';
+import RiskNotice from '../components/RiskNotice.astro';
+---
+
+<BaseLayout
+  title="投资工具"
+  description="两个纯前端投资计算器：复利终值与每月定投测算。输入校验、结果计算均在浏览器完成，不上传任何数据。仅作演示，不构成投资建议。"
+>
+  <section class="relative overflow-hidden border-b border-line">
+    <div class="hero-grid pointer-events-none absolute inset-0" aria-hidden="true"></div>
+    <div class="shell relative py-12 sm:py-16">
+      <Breadcrumbs items={[{ label: '首页', href: '/' }, { label: '投资工具' }]} />
+
+      <div class="mt-10 grid gap-10 lg:grid-cols-[1.35fr_0.65fr] lg:items-end">
+        <div>
+          <p class="eyebrow">Tools / 投资工具</p>
+          <h1 class="display-title mt-5 text-[clamp(2rem,5.4vw,4.7rem)] text-ink">
+            把假设算清楚，<br />再做决定。
+          </h1>
+          <p class="mt-5 max-w-2xl text-sm leading-8 text-muted sm:text-base">
+            复利与定投是长期投资里最基本的两个算术问题。调整参数，实时看到结果与假设边界。没有隐藏的产品推荐，也没有后端请求。
+          </p>
+        </div>
+
+        <div class="grid grid-cols-3 gap-3 border-t border-line pt-5 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
+          <div>
+            <p class="font-serif text-2xl text-ink">2</p>
+            <p class="mt-1 text-[0.62rem] leading-5 text-muted">个计算器</p>
+          </div>
+          <div class="border-x border-line px-4">
+            <p class="font-serif text-2xl text-ink">0</p>
+            <p class="mt-1 text-[0.62rem] leading-5 text-muted">次数据上传</p>
+          </div>
+          <div>
+            <p class="font-mono text-sm font-semibold leading-8 text-ink">LOCAL</p>
+            <p class="mt-1 text-[0.62rem] leading-5 text-muted">输入不离开浏览器</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="shell py-12 sm:py-16" aria-label="投资计算器">
+    <CalculatorTabs client:load />
+  </section>
+
+  <section class="shell pb-4" aria-labelledby="assumptions-heading">
+    <div class="grid gap-10 border-t border-line pt-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-16">
+      <div>
+        <p class="eyebrow">Assumptions / 计算口径</p>
+        <h2 id="assumptions-heading" class="display-title mt-4 text-3xl text-ink">
+          先理解模型，<br />再相信数字。
+        </h2>
+        <p class="mt-4 max-w-sm text-sm leading-7 text-muted">
+          计算器只能回答“在假设成立时会发生什么”，不能回答“假设是否成立”。以下边界比结果更重要。
+        </p>
+      </div>
+
+      <div class="grid gap-4 sm:grid-cols-3">
+        <article class="border border-line bg-paper-soft p-5">
+          <span class="font-mono text-[0.6rem] text-accent-deep">01 / COMPOUND</span>
+          <h3 class="mt-4 font-serif text-xl text-ink">复利</h3>
+          <p class="mt-2 text-xs leading-6 text-muted">
+            固定年化收益率，按年、半年、季度或月复利。假设收益率与再投资条件始终不变。
+          </p>
+          <code class="mt-4 block border-t border-line pt-3 font-mono text-[0.65rem] leading-6 text-ink">
+            FV = P × (1 + r/m)^(m×t)
+          </code>
+        </article>
+
+        <article class="border border-line bg-paper-soft p-5">
+          <span class="font-mono text-[0.6rem] text-accent-deep">02 / DCA</span>
+          <h3 class="mt-4 font-serif text-xl text-ink">定投</h3>
+          <p class="mt-2 text-xs leading-6 text-muted">
+            每月固定金额投入，按月复利。可选择月初或月末投入；不模拟净值波动路径。
+          </p>
+          <code class="mt-4 block border-t border-line pt-3 font-mono text-[0.62rem] leading-6 text-ink">
+            PMT × [((1+i)^n − 1) / i]
+          </code>
+        </article>
+
+        <article class="border border-line bg-paper-soft p-5">
+          <span class="font-mono text-[0.6rem] text-accent-deep">03 / OMITTED</span>
+          <h3 class="mt-4 font-serif text-xl text-ink">未计入项</h3>
+          <p class="mt-2 text-xs leading-6 text-muted">
+            手续费、税费、通胀、汇率、跟踪误差、暂停投入与市场波动导致的路径差异。
+          </p>
+          <p class="mt-4 border-t border-line pt-3 text-[0.65rem] leading-5 text-muted">
+            参数范围：年化收益率 -50%–50%；年限 1–50 年；输入会实时校验。
+          </p>
+        </article>
+      </div>
+    </div>
+
+    <div class="mt-8">
+      <RiskNotice
+        title="演示说明"
+        text="本页计算器仅为演示，不构成投资建议。所有结果基于固定收益率、固定投入与固定复利频率的假设，不代表任何真实产品或未来收益；实际投资结果可能显著不同。"
+      />
+    </div>
+  </section>
+</BaseLayout>

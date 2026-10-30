@@ -1,0 +1,106 @@
+---
+import { NAV_ITEMS, SITE } from '../lib/site';
+
+const pathname = Astro.url.pathname;
+const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.startsWith(href));
+---
+
+<header class="site-header">
+  <div class="shell flex h-[4.75rem] items-center justify-between gap-6">
+    <a href="/" class="group flex items-center gap-3" aria-label={`${SITE.name} 首页`}>
+      <span class="relative flex h-10 w-10 shrink-0 items-center justify-center bg-ink text-paper-soft shadow-sm">
+        <span class="font-serif text-[1.35rem] font-semibold leading-none">衡</span>
+        <span class="absolute right-0 top-0 h-1.5 w-1.5 bg-accent" aria-hidden="true"></span>
+      </span>
+      <span class="flex flex-col justify-center">
+        <span class="font-serif text-[1.18rem] font-semibold leading-tight tracking-[0.08em] text-ink">
+          {SITE.name}
+        </span>
+        <span class="mt-0.5 font-mono text-[0.52rem] tracking-[0.18em] text-muted">
+          {SITE.english}
+        </span>
+      </span>
+    </a>
+
+    <nav class="hidden items-center gap-8 lg:flex" aria-label="主导航">
+      {
+        NAV_ITEMS.filter((item) => item.href !== '/favorites/').map((item) => (
+          <a
+            href={item.href}
+            class="nav-link"
+            aria-current={isActive(item.href) ? 'page' : undefined}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="hidden items-center gap-5 lg:flex">
+      <a
+        href="/favorites/"
+        class:list={[
+          'inline-flex h-10 w-10 items-center justify-center border border-line-dark text-ink transition-colors hover:border-ink hover:bg-white/40',
+          isActive('/favorites/') && 'border-ink bg-white/50',
+        ]}
+        aria-label="我的收藏"
+        aria-current={isActive('/favorites/') ? 'page' : undefined}
+      >
+        <svg aria-hidden="true" viewBox="0 0 24 24" class="h-[1.05rem] w-[1.05rem]" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
+          <path d="M6.5 4.25h11v16l-5.5-3.9-5.5 3.9v-16Z"></path>
+        </svg>
+      </a>
+      <a href="/subscribe/" class="btn btn-primary min-h-0 px-5 py-3 text-xs">
+        订阅研究
+        <span aria-hidden="true">↗</span>
+      </a>
+    </div>
+
+    <div class="flex items-center gap-2 lg:hidden">
+      <a
+        href="/favorites/"
+        class="inline-flex h-10 w-10 items-center justify-center border border-line-dark text-ink"
+        aria-label="我的收藏"
+      >
+        <svg aria-hidden="true" viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
+          <path d="M6.5 4.25h11v16l-5.5-3.9-5.5 3.9v-16Z"></path>
+        </svg>
+      </a>
+
+      <details class="mobile-menu relative">
+        <summary class="flex h-10 w-10 cursor-pointer list-none flex-col items-center justify-center gap-[5px] border border-line-dark text-ink">
+          <span class="sr-only">打开导航菜单</span>
+          <span class="menu-line-top h-px w-4 bg-current transition-transform duration-200"></span>
+          <span class="menu-line-middle h-px w-4 bg-current transition-opacity duration-200"></span>
+          <span class="menu-line-bottom h-px w-4 bg-current transition-transform duration-200"></span>
+        </summary>
+
+        <div class="mobile-menu-panel absolute right-0 top-[calc(100%+0.9rem)] border border-line bg-paper p-6 shadow-[0_24px_80px_-24px_rgba(11,31,51,0.35)]">
+          <p class="rule-label text-muted">Navigate / 导航</p>
+          <nav class="mt-3" aria-label="移动端主导航">
+            {NAV_ITEMS.map((item) => (
+              <a
+                href={item.href}
+                class:list={[
+                  'flex items-center justify-between border-b border-line py-3 text-sm',
+                  isActive(item.href) ? 'font-semibold text-ink' : 'text-muted',
+                ]}
+                aria-current={isActive(item.href) ? 'page' : undefined}
+              >
+                <span>{item.label}</span>
+                <span aria-hidden="true" class="text-accent-deep">↗</span>
+              </a>
+            ))}
+          </nav>
+          <a href="/subscribe/" class="btn btn-primary mt-6 w-full text-xs">
+            订阅研究
+            <span aria-hidden="true">↗</span>
+          </a>
+          <p class="mt-4 text-[0.68rem] leading-5 text-muted">
+            独立研究笔记 · 不构成投资建议
+          </p>
+        </div>
+      </details>
+    </div>
+  </div>
+</header>

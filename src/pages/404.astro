@@ -1,0 +1,44 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="页面未找到"
+  description="你访问的页面不存在，可能链接已失效或内容尚未发布。返回首页继续浏览衡远研究。"
+  noindex={true}
+>
+  <section class="relative flex min-h-[62vh] items-center overflow-hidden border-b border-line">
+    <div class="hero-grid pointer-events-none absolute inset-0" aria-hidden="true"></div>
+    <div class="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 select-none font-serif text-[18rem] leading-none text-ink/[0.035] sm:text-[28rem]" aria-hidden="true">
+      404
+    </div>
+
+    <div class="shell relative py-20 sm:py-28">
+      <div class="max-w-2xl">
+        <p class="eyebrow">404 / Page not found</p>
+        <p class="mt-8 font-mono text-[0.68rem] tracking-[0.18em] text-accent-deep">LOST IN THE FOOTNOTES</p>
+        <h1 class="display-title mt-4 text-[clamp(2.2rem,6vw,5rem)] text-ink">
+          这条路，<br />没有研究覆盖。
+        </h1>
+        <p class="mt-6 max-w-lg text-sm leading-8 text-muted">
+          你访问的页面不存在，可能链接已经失效，或内容尚未发布。回到已知的坐标，继续阅读。
+        </p>
+
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="/" class="btn btn-primary px-6">
+            返回首页
+            <span aria-hidden="true">↗</span>
+          </a>
+          <a href="/research/" class="btn btn-outline px-6">浏览研究档案</a>
+        </div>
+
+        <div class="mt-12 flex flex-wrap gap-x-7 gap-y-3 border-t border-line pt-5 text-xs text-muted">
+          <a href="/tools/" class="transition-colors hover:text-ink">投资工具</a>
+          <a href="/about/" class="transition-colors hover:text-ink">关于衡远</a>
+          <a href="/favorites/" class="transition-colors hover:text-ink">我的收藏</a>
+          <a href="/rss.xml" class="transition-colors hover:text-ink">RSS 订阅</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

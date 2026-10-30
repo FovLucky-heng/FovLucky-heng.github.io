@@ -1,0 +1,304 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import { getPublishedArticles } from '../lib/articles';
+import { formatDateShort } from '../lib/format';
+import { CATEGORIES, HOME_FRAMEWORKS } from '../lib/site';
+
+const articles = await getPublishedArticles();
+const latest = articles.slice(0, 3);
+const categoryCards = CATEGORIES.map((category) => ({
+  ...category,
+  count: articles.filter((article) => article.data.category === category.name).length,
+}));
+const latestDate = articles[0]?.data.date ?? new Date();
+const totalResearch = articles.length;
+
+const allocation = [
+  { label: '全球股票', value: 32, color: '#c9a36a' },
+  { label: '中国权益', value: 23, color: '#dfd8c8' },
+  { label: '债券', value: 32, color: '#718892' },
+  { label: '黄金及现金', value: 13, color: '#9f7b50' },
+];
+---
+
+<BaseLayout
+  description="衡远研究关注资产配置、行业研究与组合纪律。阅读独立研究文章，使用复利与定投计算器，建立可验证的投资框架。"
+>
+  <section class="relative overflow-hidden border-b border-line">
+    <div class="hero-grid pointer-events-none absolute inset-0" aria-hidden="true"></div>
+    <div
+      class="pointer-events-none absolute -right-20 top-24 hidden select-none font-serif text-[24rem] leading-none text-ink/[0.025] lg:block"
+      aria-hidden="true"
+    >
+      衡
+    </div>
+
+    <div class="shell relative grid gap-14 py-14 sm:py-20 lg:grid-cols-[1.08fr_0.92fr] lg:items-center lg:gap-16 lg:py-24">
+      <div class="hero-reveal">
+        <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
+          <p class="eyebrow">Independent research / 独立研究</p>
+          <span class="hidden h-px w-10 bg-line-dark sm:block" aria-hidden="true"></span>
+          <span class="font-mono text-[0.62rem] tracking-[0.1em] text-muted">EST. 2026</span>
+        </div>
+
+        <h1 class="display-title mt-7 text-[clamp(2.85rem,6.2vw,4.9rem)] leading-[1.12] text-ink">
+          <span class="block whitespace-nowrap">在噪声之外，</span>
+          <span class="block whitespace-nowrap">建立自己的</span>
+          <span class="block whitespace-nowrap">
+            资产坐标<span class="text-accent-deep">。</span>
+          </span>
+        </h1>
+
+        <p class="mt-7 max-w-xl text-[0.95rem] leading-8 text-muted sm:text-base">
+          把宏观判断、行业证据与组合纪律，放进同一套可验证的框架。
+          这里没有喊单，只有可以带走的研究方法与思考工具。
+        </p>
+
+        <div class="mt-9 flex flex-wrap items-center gap-3">
+          <a href="/research/" class="btn btn-primary px-6">
+            开始阅读研究
+            <span aria-hidden="true">↗</span>
+          </a>
+          <a href="/about/" class="btn btn-outline px-6">
+            了解研究框架
+          </a>
+        </div>
+
+        <dl class="mt-12 grid max-w-xl grid-cols-3 gap-4 border-t border-line pt-6">
+          <div>
+            <dt class="rule-label text-muted">Research</dt>
+            <dd class="mt-1 font-serif text-2xl text-ink">
+              {totalResearch}<span class="ml-1 text-xs font-sans text-muted">篇</span>
+            </dd>
+          </div>
+          <div class="border-x border-line px-5">
+            <dt class="rule-label text-muted">Themes</dt>
+            <dd class="mt-1 font-serif text-2xl text-ink">
+              {CATEGORIES.length}<span class="ml-1 text-xs font-sans text-muted">个</span>
+            </dd>
+          </div>
+          <div>
+            <dt class="rule-label text-muted">Updated</dt>
+            <dd class="mt-1 font-serif text-lg leading-8 text-ink">{formatDateShort(latestDate)}</dd>
+          </div>
+        </dl>
+      </div>
+
+      <div class="relative mx-auto w-full max-w-[29rem] lg:mr-0">
+        <div class="absolute -right-2.5 -top-2.5 hidden h-full w-full border border-accent/45 sm:block" aria-hidden="true"></div>
+        <figure class="relative bg-ink p-6 text-paper shadow-[0_32px_80px_-44px_rgba(11,31,51,0.65)] sm:p-8">
+          <div class="flex items-center justify-between gap-3 border-b border-white/15 pb-4">
+            <p class="rule-label text-paper/45">Allocation map / 配置示意</p>
+            <span class="border border-paper/20 px-2 py-0.5 font-mono text-[0.52rem] tracking-widest text-paper/50">
+              DEMO
+            </span>
+          </div>
+
+          <div class="mt-6 flex items-end justify-between gap-4">
+            <div>
+              <p class="font-serif text-2xl text-paper sm:text-[1.7rem]">均衡型组合</p>
+              <p class="mt-1 text-[0.72rem] text-paper/45">跨资产的风险预算 · 研究示意</p>
+            </div>
+            <span class="font-mono text-[0.58rem] tracking-[0.1em] text-accent">04 SLEEVES</span>
+          </div>
+
+          <div class="mt-7 grid items-center gap-7 sm:grid-cols-[9.5rem_1fr]">
+            <div class="relative mx-auto h-[9.5rem] w-[9.5rem]">
+              <svg viewBox="0 0 180 180" class="h-full w-full" aria-hidden="true">
+                <circle cx="90" cy="90" r="66" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="24"></circle>
+                <g transform="rotate(-90 90 90)">
+                  {
+                    allocation.map((item, index) => {
+                      const offset = allocation
+                        .slice(0, index)
+                        .reduce((sum, segment) => sum + segment.value, 0);
+                      return (
+                        <circle
+                          cx="90"
+                          cy="90"
+                          r="66"
+                          fill="none"
+                          stroke={item.color}
+                          stroke-width="24"
+                          pathLength="100"
+                          stroke-dasharray={`${item.value} ${100 - item.value}`}
+                          stroke-dashoffset={String(-offset)}
+                        />
+                      );
+                    })
+                  }
+                </g>
+              </svg>
+              <div class="absolute inset-0 flex flex-col items-center justify-center">
+                <span class="font-serif text-3xl leading-none text-paper">4</span>
+                <span class="mt-1.5 text-[0.58rem] tracking-[0.14em] text-paper/40">资产篮子</span>
+              </div>
+            </div>
+
+            <ul class="space-y-2.5">
+              {
+                allocation.map((item) => (
+                  <li class="flex items-center justify-between gap-3 border-b border-white/10 pb-2.5 text-xs last:border-0 last:pb-0">
+                    <span class="flex items-center gap-2.5 text-paper/65">
+                      <span class="h-2 w-2 shrink-0" style={`background:${item.color}`} aria-hidden="true"></span>
+                      {item.label}
+                    </span>
+                    <span class="font-mono text-[0.68rem] text-paper/85">{item.value}%</span>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+
+          <div class="mt-7 grid grid-cols-2 gap-4 border-t border-white/15 pt-4">
+            <div>
+              <p class="text-[0.58rem] tracking-wide text-paper/35">再平衡阈值</p>
+              <p class="mt-1 text-xs text-paper/75">±5 个百分点</p>
+            </div>
+            <div class="border-l border-white/15 pl-4">
+              <p class="text-[0.58rem] tracking-wide text-paper/35">复核频率</p>
+              <p class="mt-1 text-xs text-paper/75">每季度检查</p>
+            </div>
+          </div>
+
+          <figcaption class="mt-5 text-[0.58rem] leading-5 text-paper/30">
+            仅用于展示配置方法，不代表真实组合或收益承诺。
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="shell py-20 lg:py-28" aria-labelledby="latest-heading">
+    <SectionHeading
+      id="latest-heading"
+      eyebrow="Latest research / 最新研究"
+      title="从问题出发，而不是从行情出发"
+      description="每一篇研究都试图回答一个可以验证的问题：我们在什么位置，证据是否充分，以及什么情况下应该改变判断。"
+      href="/research/"
+      linkLabel="浏览全部研究"
+    />
+
+    <div class="mt-11 grid gap-x-7 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+      {latest.map((article, index) => (
+        <ArticleCard article={article} loading={index === 0 ? 'eager' : 'lazy'} />
+      ))}
+    </div>
+
+    <div class="mt-12 flex flex-col justify-between gap-3 border-t border-line pt-5 text-xs text-muted sm:flex-row sm:items-center">
+      <p>研究档案持续更新 · 所有内容仅为信息分享</p>
+      <a href="/research/" class="text-link text-xs">
+        进入研究档案
+        <span aria-hidden="true">↗</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="relative overflow-hidden bg-ink text-paper" aria-labelledby="framework-heading">
+    <div class="pointer-events-none absolute -bottom-28 -right-12 select-none font-serif text-[28rem] leading-none text-white/[0.025]" aria-hidden="true">
+      衡
+    </div>
+    <div class="shell relative grid gap-12 py-20 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20 lg:py-28">
+      <div class="lg:sticky lg:top-28 lg:self-start">
+        <p class="eyebrow eyebrow--light">Research framework / 研究框架</p>
+        <h2 id="framework-heading" class="display-title mt-5 max-w-md text-3xl text-paper sm:text-4xl lg:text-[3rem]">
+          不预测每一次波动，只建立可复用的判断顺序。
+        </h2>
+        <p class="mt-6 max-w-sm text-sm leading-7 text-paper/55">
+          研究不是收集更多观点，而是把关键变量、证据与证伪条件放在同一张桌上。这个框架贯穿站内的每一篇文章，也贯穿两个计算器的假设。
+        </p>
+        <a href="/about/" class="btn btn-ghost-light mt-8 text-xs">
+          查看完整方法
+          <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+
+      <div>
+        {
+          HOME_FRAMEWORKS.map((item) => (
+            <article class="group grid grid-cols-[2.75rem_1fr] gap-5 border-t border-white/15 py-7 first:border-t-0 first:pt-0 sm:grid-cols-[3.5rem_1fr] sm:gap-7">
+              <span class="font-mono text-xs text-accent">{item.index}</span>
+              <div>
+                <div class="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+                  <h3 class="font-serif text-xl text-paper sm:text-[1.4rem]">{item.title}</h3>
+                  <span class="font-mono text-[0.56rem] uppercase tracking-[0.15em] text-paper/30">
+                    {item.en}
+                  </span>
+                </div>
+                <p class="mt-3 max-w-xl text-sm leading-7 text-paper/55">{item.description}</p>
+              </div>
+            </article>
+          ))
+        }
+        <div class="border-t border-white/15 pt-6">
+          <p class="font-serif text-sm italic text-paper/45">“先定义风险，再讨论收益。”</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="shell py-20 lg:py-28" aria-labelledby="themes-heading">
+    <SectionHeading
+      id="themes-heading"
+      eyebrow="Research themes / 主题分类"
+      title="沿着问题，进入六个研究方向"
+      description="从大类资产到产业细节，从估值方法到组合纪律。六个主题相互连接，构成一张完整的研究地图。"
+    />
+
+    <div class="mt-11 grid border-l border-t border-line sm:grid-cols-2 lg:grid-cols-3">
+      {
+        categoryCards.map((category, index) => (
+          <a
+            href={`/research/?category=${encodeURIComponent(category.name)}`}
+            class="group relative flex min-h-[14rem] flex-col border-b border-r border-line bg-paper/40 p-6 transition-colors duration-200 hover:bg-paper-soft sm:p-7"
+          >
+            <div class="flex items-start justify-between gap-4">
+              <span class="font-mono text-[0.62rem] tracking-[0.12em] text-muted">
+                {String(index + 1).padStart(2, '0')} / {category.en}
+              </span>
+              <span class="text-lg text-line-dark transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent-deep" aria-hidden="true">
+                ↗
+              </span>
+            </div>
+            <h3 class="mt-7 font-serif text-[1.55rem] text-ink">{category.name}</h3>
+            <p class="mt-2 max-w-xs text-sm leading-6 text-muted">{category.description}</p>
+            <div class="mt-auto flex items-center justify-between border-t border-line/80 pt-4">
+              <span class="text-[0.65rem] tracking-wide text-muted">{category.count} 篇研究</span>
+              <span class="h-px w-6 bg-line-dark transition-all duration-200 group-hover:w-10 group-hover:bg-accent" aria-hidden="true"></span>
+            </div>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="shell pb-4" aria-labelledby="subscribe-cta-heading">
+    <div class="relative overflow-hidden border border-line-dark bg-paper-deep px-6 py-12 sm:px-10 sm:py-14 lg:px-16 lg:py-16">
+      <div class="pointer-events-none absolute -bottom-12 right-4 select-none font-serif text-[13rem] leading-none text-ink/[0.045] sm:text-[18rem]" aria-hidden="true">
+        订阅
+      </div>
+      <div class="relative grid gap-9 lg:grid-cols-[1.1fr_0.9fr] lg:items-end lg:gap-16">
+        <div>
+          <p class="eyebrow">Newsletter / 订阅</p>
+          <h2 id="subscribe-cta-heading" class="display-title mt-5 max-w-xl text-3xl sm:text-4xl lg:text-[3.2rem]">
+            把重要的判断，留给少数真正重要的问题。
+          </h2>
+          <p class="mt-5 max-w-lg text-sm leading-7 text-muted">
+            留下你的兴趣方向，第一时间获取新的研究笔记与工具更新。不定期发送，只写经过思考的内容。
+          </p>
+        </div>
+        <div class="lg:justify-self-end">
+          <a href="/subscribe/" class="btn btn-primary w-full px-7 sm:w-auto">
+            登记订阅意向
+            <span aria-hidden="true">↗</span>
+          </a>
+          <p class="mt-4 max-w-xs text-[0.65rem] leading-5 text-muted">
+            当前为前端 MVP 演示，提交不会真的发送邮件或存储到服务器。
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

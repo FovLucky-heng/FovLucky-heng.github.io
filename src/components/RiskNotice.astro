@@ -1,0 +1,41 @@
+---
+interface Props {
+  title?: string;
+  text?: string;
+  compact?: boolean;
+}
+
+const {
+  title = '风险提示',
+  text = '本文仅为研究框架与信息分享，不构成任何投资建议、收益承诺或产品推介。市场有风险，投资需谨慎。文中观点可能随数据、假设与市场环境变化而调整。',
+  compact = false,
+} = Astro.props;
+---
+
+<aside
+  class:list={[
+    'border border-line bg-paper-deep/55',
+    compact ? 'p-4' : 'p-5 sm:p-7',
+  ]}
+  aria-label={title}
+>
+  <div class="flex items-start gap-4">
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      class="mt-0.5 h-5 w-5 shrink-0 text-accent-deep"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.4"
+    >
+      <path d="M12 3.5 21 20H3L12 3.5Z" stroke-linejoin="round"></path>
+      <path d="M12 9v5.2M12 17.2v.2" stroke-linecap="round"></path>
+    </svg>
+    <div>
+      <p class="rule-label text-accent-deep">{title} / Risk disclosure</p>
+      <p class:list={['mt-2 text-muted', compact ? 'text-xs leading-6' : 'text-sm leading-7']}>
+        {text}
+      </p>
+    </div>
+  </div>
+</aside>

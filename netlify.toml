@@ -1,0 +1,22 @@
+# Netlify 静态部署配置。
+# 本项目是 MPA（多页静态站点），不要添加 /* -> /index.html 的 SPA rewrite，
+# 否则真实 404 会被首页替代，搜索引擎也会把错误 URL 当作重复页面。
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "24"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

@@ -1,0 +1,69 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import ResearchExplorer from '../../components/ResearchExplorer';
+import { getPublishedArticles, toResearchItem } from '../../lib/articles';
+import { formatDateShort } from '../../lib/format';
+import { CATEGORIES } from '../../lib/site';
+
+const articles = await getPublishedArticles();
+const items = articles.map(toResearchItem);
+const latestDate = articles[0]?.data.date ?? new Date();
+const oldestDate = articles[articles.length - 1]?.data.date ?? new Date();
+---
+
+<BaseLayout
+  title="研究档案"
+  description={`衡远研究档案：${items.length} 篇关于资产配置、行业研究、组合管理与研究方法的深度笔记。支持关键词搜索、主题与标签筛选、排序与分页。`}
+>
+  <section class="relative overflow-hidden border-b border-line">
+    <div class="hero-grid pointer-events-none absolute inset-0" aria-hidden="true"></div>
+    <div class="shell relative py-12 sm:py-16 lg:py-20">
+      <Breadcrumbs items={[{ label: '首页', href: '/' }, { label: '研究档案' }]} />
+
+      <div class="mt-10 grid gap-10 lg:grid-cols-[1.35fr_0.65fr] lg:items-end">
+        <div>
+          <p class="eyebrow">Research archive / 研究档案</p>
+          <h1 class="display-title mt-5 text-[clamp(2.8rem,6vw,4.8rem)] text-ink">
+            研究档案
+          </h1>
+          <p class="mt-5 max-w-2xl text-sm leading-8 text-muted sm:text-base">
+            围绕资产配置、行业与组合纪律的研究笔记。用关键词、主题或标签找到你关心的问题；所有筛选、排序与分页都在你的浏览器中完成。
+          </p>
+        </div>
+
+        <div class="grid grid-cols-3 gap-4 border-t border-line pt-5 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
+          <div>
+            <p class="rule-label text-muted">Notes</p>
+            <p class="mt-1 font-serif text-2xl text-ink">{items.length}</p>
+            <p class="text-[0.62rem] text-muted">篇公开研究</p>
+          </div>
+          <div>
+            <p class="rule-label text-muted">Themes</p>
+            <p class="mt-1 font-serif text-2xl text-ink">{CATEGORIES.length}</p>
+            <p class="text-[0.62rem] text-muted">个主题</p>
+          </div>
+          <div>
+            <p class="rule-label text-muted">Archive</p>
+            <p class="mt-1 font-serif text-lg leading-8 text-ink">{formatDateShort(oldestDate)}</p>
+            <p class="text-[0.62rem] text-muted">起始 · 更新至 {formatDateShort(latestDate)}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="shell py-10 sm:py-14">
+    <ResearchExplorer articles={items} client:load />
+  </section>
+
+  <section class="shell pb-4">
+    <div class="flex flex-col justify-between gap-4 border-t border-line pt-6 text-xs text-muted sm:flex-row sm:items-center">
+      <p>找不到合适的内容？可以从研究框架开始，或订阅后续更新。</p>
+      <div class="flex flex-wrap gap-5">
+        <a href="/about/" class="text-link text-xs">了解研究方法 <span aria-hidden="true">↗</span></a>
+        <a href="/rss.xml" class="text-link text-xs">RSS 订阅 <span aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

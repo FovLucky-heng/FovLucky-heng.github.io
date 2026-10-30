@@ -1,0 +1,34 @@
+---
+interface Crumb {
+  label: string;
+  href?: string;
+}
+
+interface Props {
+  items: Crumb[];
+  light?: boolean;
+}
+
+const { items, light = false } = Astro.props;
+---
+
+<nav aria-label="面包屑导航">
+  <ol class:list={['flex flex-wrap items-center gap-2 text-[0.68rem] tracking-wide', light ? 'text-paper/45' : 'text-muted']}>
+    {
+      items.map((item, index) => (
+        <li class="flex items-center gap-2">
+          {index > 0 && <span aria-hidden="true" class="text-line-dark">/</span>}
+          {item.href ? (
+            <a href={item.href} class="transition-colors hover:text-accent-deep">
+              {item.label}
+            </a>
+          ) : (
+            <span aria-current="page" class={light ? 'text-paper/80' : 'text-ink'}>
+              {item.label}
+            </span>
+          )}
+        </li>
+      ))
+    }
+  </ol>
+</nav>
