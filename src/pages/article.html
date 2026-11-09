@@ -1,0 +1,27 @@
+<div class="wrap">
+  <div class="article-head">
+    <a class="article-head__back" href="/{{channelId}}.html">‹ 返回 {{channelName}}</a>
+    <h1 class="article-head__title">{{title}}</h1>
+    <div class="article-head__meta">
+      <span class="chip" style="--accent:{{deep}}">{{tag}}</span>
+      <span>{{channelName}}</span><span>·</span>
+      <span>{{minutes}} 分钟阅读</span>
+      <span style="margin-left:auto"><button class="icon-btn" type="button" data-fav="{{slug}}" aria-pressed="false"><span aria-hidden="true">♡</span> 收藏</button></span>
+    </div>
+  </div>
+  <article class="article-body" style="padding:36px 0 20px">
+{{body}}
+  </article>
+  <div class="callout" style="max-width:68ch">{{notice}}</div>
+</div>
+
+<section class="section section--subtle mt-32">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 class="h-section">继续读</h2>
+    </div>
+    <div class="grid-3">
+{{related}}
+    </div>
+  </div>
+</section>

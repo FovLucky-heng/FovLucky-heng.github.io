@@ -1,0 +1,78 @@
+<header class="hero">
+  <div class="hero__glow" aria-hidden="true"></div>
+  <div class="wrap">
+    <h1 class="hero__title">把生活，<br />调回<em>喜欢的频道</em></h1>
+    <p class="hero__sub">健康吃、随心穿、不蕉绿、开心练、智慧投。
+每天五个小动作，慢慢把生活握回自己手里。</p>
+    <div class="hero__actions">
+      <a class="btn btn--primary" href="/checkin.html">开始今日打卡</a>
+      <a class="btn btn--ghost" href="#channels">逛逛五号线</a>
+    </div>
+    <p class="hero__note">不追求满分生活，只练习刚刚好的掌控感。</p>
+  </div>
+</header>
+
+<section class="section" id="channels">
+  <div class="wrap">
+    <div class="section-head section-head--center reveal">
+      <span class="eyebrow">五号线</span>
+      <h2 class="h-section">今天想从哪一站上车？</h2>
+      <p class="sub-section">五条线，五个方向，都是一个目的：把日子过得舒服一点。</p>
+    </div>
+    <div class="channel-grid">
+{{channels}}
+    </div>
+  </div>
+</section>
+
+<section class="section section--subtle">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">每天</span>
+      <h2 class="h-section">今日五件小事</h2>
+      <p class="sub-section">不用全做，挑一件也算今天没白过。</p>
+    </div>
+    <div class="daily" id="dailyList">
+{{dailyItems}}
+    </div>
+    <div class="daily__progress" id="dailyProgress"></div>
+    <div class="row mt-24">
+      <a class="btn btn--ghost" href="/checkin.html">去打卡</a>
+      <a class="btn btn--quiet" href="/me.html">看看我的记录 ›</a>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">工具</span>
+      <h2 class="h-section">顺手能用的小工具</h2>
+      <p class="sub-section">解决“今天吃什么”“穿什么”“钱去哪了”。</p>
+    </div>
+    <div class="grid-4" style="grid-template-columns:repeat(auto-fill,minmax(220px,1fr))">
+{{tools}}
+    </div>
+    <div class="row mt-24">
+      <a class="btn btn--ghost" href="/tools.html">进入工具库</a>
+    </div>
+  </div>
+</section>
+
+<section class="section section--subtle">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">内容</span>
+      <h2 class="h-section">最近更新</h2>
+    </div>
+    <div class="segmented" id="latestTabs" style="margin-bottom:26px">
+{{latestTabs}}
+    </div>
+    <div class="grid-3" id="latestGrid">
+{{latestCards}}
+    </div>
+    <div class="row mt-24">
+      <button class="btn btn--ghost" type="button" id="latestMore" aria-expanded="false">查看全部 {{totalArticles}} 篇</button>
+    </div>
+  </div>
+</section>

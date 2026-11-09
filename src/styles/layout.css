@@ -1,0 +1,240 @@
+/* =========================================================
+   layout.css — 页面骨架：容器、导航、页脚、底部 tab bar
+   ========================================================= */
+/* ---------- 3. Layout ---------- */
+.wrap {
+  width: 100%;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 22px;
+}
+.section {
+  padding: 76px 0;
+}
+.section--tight {
+  padding: 44px 0;
+}
+.section--subtle {
+  background: var(--bg-subtle);
+}
+.section-head {
+  margin-bottom: 36px;
+}
+.section-head--center {
+  text-align: center;
+}
+.eyebrow {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 10px;
+}
+.h-section {
+  font-size: clamp(28px, 4.2vw, 40px);
+  line-height: 1.12;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+.h-sub {
+  font-size: clamp(21px, 2.6vw, 25px);
+  line-height: 1.25;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+.sub-section {
+  margin-top: 12px;
+  color: var(--ink-2);
+  font-size: 17px;
+  max-width: 60ch;
+}
+.section-head--center .sub-section {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ---------- 4. Nav ---------- */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 90;
+  height: var(--nav-h);
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid var(--line);
+}
+@supports not (background: color-mix(in srgb, red, blue)) {
+  .nav {
+    background: var(--bg);
+  }
+}
+.nav__inner {
+  height: 100%;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 22px;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+.nav__brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.nav__brand:hover {
+  text-decoration: none;
+}
+.nav__dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #7c9a76, #d9803f 45%, #b08f3c);
+}
+.nav__links {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  margin-left: auto;
+}
+.nav__link {
+  font-size: 13px;
+  color: var(--ink-2);
+  font-weight: 500;
+  letter-spacing: 0;
+  transition: color 0.2s var(--ease);
+}
+.nav__link:hover {
+  color: var(--ink);
+  text-decoration: none;
+}
+.nav__link[aria-current="page"] {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* ---------- 22. Footer ---------- */
+.footer {
+  border-top: 1px solid var(--line);
+  padding: 44px 0 56px;
+  margin-top: 40px;
+  font-size: 13px;
+  color: var(--ink-3);
+  letter-spacing: 0;
+}
+.footer__grid {
+  display: grid;
+  grid-template-columns: 1.4fr repeat(3, 1fr);
+  gap: 32px;
+}
+@media (max-width: 760px) {
+  .footer__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+}
+.footer__brand {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.footer h4 {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-2);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin: 0 0 10px;
+}
+.footer ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.footer a {
+  color: var(--ink-3);
+}
+.footer a:hover {
+  color: var(--ink);
+  text-decoration: none;
+}
+.footer__notice {
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  line-height: 1.7;
+  max-width: 78ch;
+}
+
+/* ---------- 23. Bottom tab bar (mobile) ---------- */
+.tabbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 95;
+  display: none;
+  height: calc(var(--tab-h) + env(safe-area-inset-bottom, 0px));
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  background: color-mix(in srgb, var(--bg) 84%, transparent);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-top: 1px solid var(--line);
+}
+.tabbar__item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  font-size: 10.5px;
+  color: var(--ink-3);
+  letter-spacing: 0;
+  padding-top: 8px;
+}
+.tabbar__item:hover {
+  text-decoration: none;
+  color: var(--ink-2);
+}
+.tabbar__item[aria-current="page"] {
+  color: var(--blue);
+}
+.tabbar__icon {
+  font-size: 19px;
+  line-height: 1;
+}
+@media (max-width: 768px) {
+  .tabbar {
+    display: flex;
+  }
+  .nav__links {
+    display: none;
+  }
+  .section {
+    padding: 52px 0;
+  }
+  .hero {
+    padding: 60px 0 52px;
+  }
+  .channel-hero {
+    padding: 44px 0 40px;
+  }
+  .tool-panel {
+    padding: 22px;
+  }
+  .card--pad-lg {
+    padding: 22px;
+  }
+}

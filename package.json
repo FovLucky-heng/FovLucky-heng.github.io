@@ -1,0 +1,19 @@
+{
+  "name": "life-line-5",
+  "version": "2.0.0",
+  "private": true,
+  "description": "生活五号线 —— 健康吃、随心穿、不蕉绿、开心练、智慧投",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "dev": "node scripts/dev.mjs",
+    "preview": "node scripts/dev.mjs --no-watch",
+    "test": "node tests/build.test.mjs && node tests/e2e.test.mjs",
+    "test:build": "node tests/build.test.mjs",
+    "test:e2e": "node tests/e2e.test.mjs",
+    "clean": "node -e \"import('node:fs').then(fs=>fs.rmSync('dist',{recursive:true,force:true}))\""
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

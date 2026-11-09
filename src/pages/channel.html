@@ -1,0 +1,63 @@
+<header class="channel-hero" style="--ch:{{color}};--chd:{{deep}}">
+  <div class="wrap">
+    <span class="channel-hero__line">{{line}} · {{name}}</span>
+    <h1 class="channel-hero__title">{{claim}}</h1>
+    <p class="channel-hero__desc">{{desc}}</p>
+    <div class="channel-hero__actions">
+      <button class="btn btn--accent" type="button" data-action>{{actionBtn}}</button>
+      <a class="btn btn--ghost" href="/tools.html?tool={{firstTool}}">打开工具</a>
+    </div>
+  </div>
+</header>
+
+<section class="section section--tight">
+  <div class="wrap">
+    <div class="card card--pad-lg reveal" style="--ch:{{color}}">
+      <div class="row" style="justify-content:space-between;align-items:center">
+        <div>
+          <span class="eyebrow" style="margin-bottom:6px">今日小行动</span>
+          <h2 class="card__title" style="font-size:22px">{{action}}</h2>
+        </div>
+        <button class="btn btn--accent btn--sm" type="button" data-action data-label="1">{{actionBtn}}</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section--tight">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 class="h-section">本栏目的工具</h2>
+    </div>
+    <div class="grid-3">
+{{tools}}
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 class="h-section">读一点</h2>
+      <p class="sub-section">{{tagLine}}</p>
+    </div>
+    <div class="segmented" id="channelTags" style="margin-bottom:24px">
+{{tags}}
+    </div>
+    <div class="grid-3" id="channelArticles">
+{{articles}}
+    </div>
+  </div>
+</section>
+
+<section class="section section--tight">
+  <div class="wrap">
+    <div class="card reveal">
+      <h3 class="card__title">{{name}}的打卡</h3>
+      <p class="card__desc">{{notice}}</p>
+      <div class="card__foot">
+        <a class="btn btn--ghost btn--sm" href="/checkin.html">去今日打卡</a>
+      </div>
+    </div>
+  </div>
+</section>
