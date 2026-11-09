@@ -2,9 +2,9 @@
 
 把生活，调回喜欢的频道。一个轻量的生活方式成长网站：**健康吃 · 随心穿 · 不蕉绿 · 开心练 · 智慧投**。
 
-[![Deploy](https://github.com/FovLucky-heng/life-line-5/actions/workflows/deploy.yml/badge.svg)](https://github.com/FovLucky-heng/life-line-5/actions/workflows/deploy.yml)
+[![Deploy](https://github.com/FovLucky-heng/FovLucky-heng.github.io/actions/workflows/deploy.yml/badge.svg)](https://github.com/FovLucky-heng/FovLucky-heng.github.io/actions/workflows/deploy.yml)
 
-**线上：<https://fovlucky-heng.github.io/life-line-5/>**
+**线上：<https://fovlucky-heng.github.io/>**
 
 静态站点，零运行时依赖、零框架。源码在 `src/`，构建产物在 `dist/`，构建脚本只用 Node 内置模块。
 
@@ -22,7 +22,7 @@ npm test         # 构建检查 + 真浏览器端到端检查
 
 部署：把 `dist/` 整个目录上传到任意静态托管（GitHub Pages / Vercel / Netlify / 对象存储 / Nginx）即可，无构建钩子要求。
 
-**线上地址：<https://fovlucky-heng.github.io/life-line-5/>**
+**线上地址：<https://fovlucky-heng.github.io/>**
 
 站内链接是**相对路径**（`assets/…`、`../assets/…`），所以放在域名根、子路径、甚至本地任意目录都能跑，不需要改代码。唯一例外是 `404.html`——GitHub Pages 会用它响应任意深度的地址，因此那一个页面用站点根路径，前缀来自 `scripts/site.config.mjs` 的 `base`。
 
