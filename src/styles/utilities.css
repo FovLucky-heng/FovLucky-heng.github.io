@@ -92,3 +92,33 @@
   transform: translate(-50%, 0);
   text-decoration: none;
 }
+
+/* ---------- 尊重系统的减少动效设置 ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .hero__kicker,
+  .hero__title,
+  .hero__sub,
+  .hero__actions,
+  .hero__note {
+    opacity: 1;
+    animation: none;
+  }
+  .orb,
+  .hero__cue {
+    animation: none;
+  }
+  .route::before {
+    transform: none !important;
+  }
+  .route__dot {
+    transform: none;
+    opacity: 1;
+  }
+  .tool-panel-wrap.is-open .tool-panel,
+  .tool-panel-wrap.is-open {
+    animation: none;
+  }
+  .scroll-progress {
+    display: none;
+  }
+}

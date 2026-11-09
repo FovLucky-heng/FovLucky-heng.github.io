@@ -148,6 +148,11 @@ async function goto(path) {
 }
 
 await send("Page.enable");
+/* headless 默认上报 prefers-reduced-motion: reduce，这里显式切到 no-preference，
+   否则动画分支会被跳过（reduce 下的表现另有无障碍用例单独验证） */
+await send("Emulation.setEmulatedMedia", {
+  features: [{ name: "prefers-reduced-motion", value: "no-preference" }]
+});
 await send("Runtime.enable");
 await send("Log.enable");
 await send("Emulation.setDeviceMetricsOverride", {
@@ -159,7 +164,7 @@ await send("Emulation.setDeviceMetricsOverride", {
 
 /* ================= 首页 ================= */
 await goto("/index.html");
-check("首页 5 个栏目卡", (await evaluate(`document.querySelectorAll('.channel-card').length`)) === 5);
+check("首页 5 个线路站点", (await evaluate(`document.querySelectorAll('.route__stop').length`)) === 5);
 check("首页 20 张文章卡（预渲染）", (await evaluate(`document.querySelectorAll('#latestGrid .article-card').length`)) === 20);
 check("首页 5 个工具卡", (await evaluate(`document.querySelectorAll('.tool-card').length`)) === 5);
 check("首页 5 件小事", (await evaluate(`document.querySelectorAll('#dailyList [data-daily]').length`)) === 5);
@@ -293,7 +298,7 @@ check("7 天格子随打卡即时同步", dot === String(pressed), `dot=${dot} p
 
 /* ================= 我的 ================= */
 await goto("/me.html");
-check("我的：收藏数 1", (await evaluate(`document.querySelectorAll('.stat')[2].textContent`)).trim() === "1");
+check("我的：收藏数 1", (await evaluate(`document.querySelectorAll('.stat-bar__num')[2].dataset.count`)) === "1");
 check("我的：收藏卡渲染", (await evaluate(`document.querySelectorAll('#favGrid .article-card').length`)) === 1);
 check("我的：心情记录出现", (await evaluate(`document.querySelector('main').textContent`)).includes("心情天气"));
 
@@ -333,6 +338,68 @@ await goto("/article/eat-10min.html");
 check("无 JS 时文章正文可读", (await evaluate(`document.querySelector('main').textContent`)).includes("快手菜的关键不是"));
 await send("Emulation.setScriptExecutionDisabled", { value: false });
 
+
+/* ================= 新增：线路图 / 工具抽屉 / 计数 / 进度条 ================= */
+await send("Emulation.setDeviceMetricsOverride", { width: 1440, height: 1000, deviceScaleFactor: 1, mobile: false });
+await goto("/index.html");
+check("线路图有连线和站点", (await evaluate(`document.querySelectorAll('.route__stop').length`)) === 5 &&
+  (await evaluate(`getComputedStyle(document.querySelector('.route'), '::before').transform !== 'none'`)));
+await sleep(1000); // 站点圆点有错峰延迟（--i × 90ms），等动画结束再断言
+check("线路图站点进入后可见", (await evaluate(`Array.from(document.querySelectorAll('.route__dot')).every(d => Number(getComputedStyle(d).opacity) > 0.9)`)));
+check("编号眉标存在", (await evaluate(`document.querySelectorAll('.eyebrow__num').length`)) === 4);
+check("工具区是横滑轨道", (await evaluate(`!!document.querySelector('.tool-rail')`)));
+check("阅读进度条已注入", (await evaluate(`!!document.querySelector('.scroll-progress')`)));
+
+/* 我的：计数从 0 滚到目标 */
+await goto("/me.html");
+check("统计条三格", (await evaluate(`document.querySelectorAll('.stat-bar__num').length`)) === 3);
+await sleep(1200);
+check("计数动画落到目标值", (await evaluate(`
+  (() => {
+    const els = Array.from(document.querySelectorAll('.stat-bar__num'));
+    return els.every((el) => el.textContent === el.dataset.count);
+  })()
+`)));
+
+/* 工具库：抽屉（手机） */
+await send("Emulation.setDeviceMetricsOverride", { width: 390, height: 844, deviceScaleFactor: 1, mobile: true });
+await goto("/tools.html");
+check("手机工具库为紧凑行", (await evaluate(`document.querySelectorAll('.tool-row').length`)) === 15);
+await evaluate(`document.querySelector('[data-tool="recipe"]').click()`);
+await sleep(500);
+check("手机点工具弹出抽屉", (await evaluate(`document.querySelector('#toolPanelWrap').classList.contains('is-open')`)));
+check("抽屉固定在视口内", (await evaluate(`
+  (() => { const w = document.querySelector('#toolPanelWrap');
+    return getComputedStyle(w).position === "fixed" && w.getBoundingClientRect().height > 300; })()
+`)));
+check("抽屉打开时锁滚动", (await evaluate(`document.body.style.overflow`)) === "hidden");
+check("抽屉内工具渲染", (await evaluate(`document.querySelectorAll('#recipeGrid .day-card').length`)) === 7);
+await evaluate(`document.querySelector('#toolClose').click()`);
+await sleep(300);
+check("关闭后恢复滚动", (await evaluate(`document.body.style.overflow`)) === "" &&
+  (await evaluate(`document.querySelector('#toolPanelWrap').innerHTML.trim().length`)) === 0);
+
+/* 手机端 .wrap 内边距没有被 .section 覆盖（回归防线） */
+await goto("/me.html");
+check("我的页有横向内边距", (await evaluate(`
+  (() => { const el = document.querySelector('#meRoot > div');
+    return parseFloat(getComputedStyle(el).paddingLeft) >= 20; })()
+`)));
+await goto("/tools.html");
+check("工具页有横向内边距", (await evaluate(`
+  (() => { const el = document.querySelector('.wrap');
+    return parseFloat(getComputedStyle(el).paddingLeft) >= 20; })()
+`)));
+
+/* 还原桌面尺寸，供后续用例 */
+await send("Emulation.setDeviceMetricsOverride", { width: 1440, height: 1000, deviceScaleFactor: 1, mobile: false });
+/* ================= 无障碍：减少动效模式下内容仍完整 ================= */
+await send("Emulation.setEmulatedMedia", { features: [{ name: "prefers-reduced-motion", value: "reduce" }] });
+await goto("/index.html");
+check("减少动效：首页内容可见", (await evaluate(`document.querySelectorAll('.route__stop').length`)) === 5 &&
+  (await evaluate(`Array.from(document.querySelectorAll('.route__dot')).every(d => Number(getComputedStyle(d).opacity) > 0.9)`)));
+check("减少动效：不注入进度条", (await evaluate(`!document.querySelector('.scroll-progress')`)));
+await send("Emulation.setEmulatedMedia", { features: [{ name: "prefers-reduced-motion", value: "no-preference" }] });
 /* ================= 汇总 ================= */
 const uniqueErrors = [...new Set(errors)].filter((e) => !e.includes("no-such-page"));
 check("运行时零错误", uniqueErrors.length === 0, uniqueErrors.slice(0, 3).join(" | "));

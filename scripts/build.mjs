@@ -20,6 +20,8 @@ import {
   esc,
   render,
   channelCard,
+  routeStops,
+  toolRow,
   articleCard,
   toolCard,
   dailyItem,
@@ -238,7 +240,7 @@ function buildHome() {
   const main = render(
     template("home.html"),
     {
-      channels: data.channels.map((c, i) => channelCard(c, i * 40)).join("\n        "),
+      routeStops: routeStops(data.channels),
       dailyItems: data.daily
         .map((d) => dailyItem(d, channelById[d.channel]))
         .join("\n        "),
@@ -359,21 +361,33 @@ function buildArticles() {
 
 /* ---------- 工具库 ---------- */
 function buildTools() {
+  const filter = `<div class="tool-filter">
+${data.channels
+  .map(
+    (c) =>
+      `    <a class="tool-filter__item" href="#group-${c.id}" style="--ch:${c.color}"><span class="tool-filter__dot"></span>${esc(
+        c.name
+      )}</a>`
+  )
+  .join("\n")}
+  </div>`;
+
   const groups = data.channels
     .map(
-      (c) => `  <div class="mt-32">
+      (c) => `  <div class="mt-32" id="group-${c.id}">
     <div class="row" style="gap:10px;align-items:center;margin-bottom:14px">
       <span class="badge" style="--ch:${c.color}">${esc(c.icon)}</span>
       <h2 class="card__title" style="font-size:17px;color:${c.deep}">${esc(c.name)}</h2>
+      <span class="hint" style="margin-left:auto">${c.tools.length} 个</span>
     </div>
-    <div class="grid-3">
-${c.tools.map((t) => toolCard(c, t, { link: false, showChannel: false })).join("\n      ")}
+    <div class="tool-list">
+${c.tools.map((t) => toolRow(c, t)).join("\n      ")}
     </div>
   </div>`
     )
     .join("\n");
 
-  const main = render(template("tools.html"), { toolGroups: groups }, "tools");
+  const main = render(template("tools.html"), { toolGroups: groups, toolFilter: filter }, "tools");
 
   shell({
     url: "/tools.html",

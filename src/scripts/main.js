@@ -5,6 +5,7 @@
 
   function boot() {
     L5.initNav();
+    L5.initScrollProgress();
 
     const page = document.body.dataset.page;
     const handler = L5.pages[page];

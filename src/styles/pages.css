@@ -325,3 +325,274 @@
   color: #fff;
   border-color: transparent;
 }
+
+/* =========================================================
+   首页专属：线路图、英雄区光球、每日区块
+   ========================================================= */
+
+/* ---------- 英雄区：入场与漂浮光球 ---------- */
+.hero__kicker {
+  display: inline-block;
+  margin: 0 auto 18px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--ink-2);
+  background: color-mix(in srgb, var(--bg-elevated) 70%, transparent);
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  animation: l5-rise 0.8s var(--ease) 0.05s forwards;
+}
+.hero__title,
+.hero__sub,
+.hero__actions,
+.hero__note {
+  opacity: 0;
+  animation: l5-rise 0.9s var(--ease) forwards;
+}
+.hero__title { animation-delay: 0.12s; }
+.hero__sub { animation-delay: 0.24s; }
+.hero__actions { animation-delay: 0.36s; }
+.hero__note { animation-delay: 0.46s; }
+
+@keyframes l5-rise {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: none; }
+}
+
+.hero__orbs {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(30px);
+  opacity: 0.5;
+  animation: l5-drift 18s ease-in-out infinite;
+}
+.orb--1 {
+  width: 180px; height: 180px; left: 8%; top: 12%;
+  background: radial-gradient(circle, rgba(124, 154, 118, 0.55), transparent 70%);
+}
+.orb--2 {
+  width: 220px; height: 220px; right: 6%; top: 4%;
+  background: radial-gradient(circle, rgba(117, 145, 172, 0.5), transparent 70%);
+  animation-delay: -6s;
+  animation-duration: 22s;
+}
+.orb--3 {
+  width: 160px; height: 160px; left: 46%; bottom: -6%;
+  background: radial-gradient(circle, rgba(217, 128, 63, 0.42), transparent 70%);
+  animation-delay: -11s;
+  animation-duration: 26s;
+}
+@keyframes l5-drift {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  33% { transform: translate3d(24px, -18px, 0) scale(1.08); }
+  66% { transform: translate3d(-18px, 14px, 0) scale(0.94); }
+}
+
+.hero__cue {
+  position: absolute;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%);
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--line-strong);
+  color: var(--ink-3);
+  font-size: 14px;
+  z-index: 2;
+  animation: l5-bob 2.4s ease-in-out infinite;
+}
+.hero__cue:hover {
+  color: var(--ink);
+  text-decoration: none;
+  border-color: var(--ink-3);
+}
+@keyframes l5-bob {
+  0%, 100% { transform: translate(-50%, 0); }
+  50% { transform: translate(-50%, 6px); }
+}
+
+/* ---------- 编号眉标 ---------- */
+.eyebrow__num {
+  display: inline-block;
+  margin-right: 10px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.02em;
+}
+
+/* ---------- 线路图 ---------- */
+.section--route {
+  background:
+    radial-gradient(60% 90% at 50% 0%, color-mix(in srgb, var(--accent) 5%, transparent), transparent 70%);
+}
+.route {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  list-style: none;
+  margin: 0;
+  padding: 8px 0 4px;
+}
+.route::before {
+  content: "";
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  top: 33px;
+  height: 3px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #7c9a76, #b08d5f 26%, #7591ac 52%, #d9803f 76%, #b08f3c);
+  opacity: 0.5;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 1.2s var(--ease) 0.1s, opacity 0.6s var(--ease);
+}
+.route.is-in::before {
+  transform: scaleX(1);
+}
+.route__stop {
+  position: relative;
+}
+.route__link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14px;
+  padding: 0 10px;
+  color: var(--ink);
+  border-radius: 18px;
+}
+.route__link:hover {
+  text-decoration: none;
+}
+.route__dot {
+  position: relative;
+  z-index: 1;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--chd, var(--ch));
+  background: var(--bg-elevated);
+  border: 2px solid var(--ch);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+  transform: scale(0.35);
+  opacity: 0;
+  transition:
+    transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1),
+    opacity 0.4s var(--ease),
+    background 0.25s var(--ease),
+    color 0.25s var(--ease);
+  transition-delay: calc(var(--i) * 90ms + 180ms);
+}
+.route.is-in .route__dot {
+  transform: scale(1);
+  opacity: 1;
+}
+.route__link:hover .route__dot {
+  background: var(--ch);
+  color: #fff;
+  transform: scale(1.08);
+  transition-delay: 0s;
+}
+.route__body {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.route__line-no {
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--chd, var(--ch));
+  opacity: 0.85;
+}
+.route__name {
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+.route__claim {
+  font-size: 14px;
+  color: var(--ink-2);
+  letter-spacing: 0;
+}
+.route__meta {
+  font-size: 12.5px;
+  color: var(--ink-3);
+  letter-spacing: 0;
+  margin-top: 2px;
+}
+@media (max-width: 900px) {
+  .route {
+    grid-template-columns: 1fr;
+    gap: 6px;
+    padding-left: 2px;
+  }
+  .route::before {
+    left: 26px;
+    right: auto;
+    top: 30px;
+    bottom: 34px;
+    width: 3px;
+    height: auto;
+    transform: scaleY(0);
+    transform-origin: top center;
+    transition: transform 1.2s var(--ease) 0.1s;
+  }
+  .route.is-in::before {
+    transform: scaleY(1);
+  }
+  .route__link {
+    flex-direction: row;
+    align-items: flex-start;
+    text-align: left;
+    gap: 16px;
+    padding: 10px 8px;
+  }
+  .route__dot {
+    flex: 0 0 auto;
+    width: 46px;
+    height: 46px;
+    font-size: 17px;
+  }
+  .route__body {
+    padding-top: 2px;
+    gap: 3px;
+  }
+  .route__name {
+    font-size: 17px;
+  }
+  .route__meta {
+    display: none;
+  }
+}
+
+/* ---------- 每日区块：和上下内容区分开 ---------- */
+.daily-band {
+  background:
+    linear-gradient(180deg, var(--bg-subtle), var(--bg));
+  border-block: 1px solid var(--line);
+}
+.daily-band__inner {
+  position: relative;
+}

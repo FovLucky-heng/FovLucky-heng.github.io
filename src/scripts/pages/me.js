@@ -2,7 +2,7 @@
 (function () {
   "use strict";
   const L5 = window.L5;
-  const { MOODS, KEY, $, esc, findArticle, favs, articleCard, streak, totalCheckinDays, moods, initReveal } = L5;
+  const { MOODS, KEY, $, esc, findArticle, favs, articleCard, streak, totalCheckinDays, moods, initReveal, initCounters } = L5;
 
   function renderMe() {
     const root = $("#meRoot");
@@ -34,18 +34,18 @@
           <p class="sub-section">所有数据只存在这台设备上，不会上传到任何服务器。</p>
         </div>
 
-        <div class="grid-3">
-          <div class="card">
-            <div class="stat">${streak()}</div>
-            <div class="stat-label">连续打卡天数</div>
+        <div class="stat-bar reveal">
+          <div class="stat-bar__item">
+            <div class="stat-bar__num" data-count="${streak()}">0</div>
+            <div class="stat-bar__label">连续打卡</div>
           </div>
-          <div class="card">
-            <div class="stat">${totalCheckinDays()}</div>
-            <div class="stat-label">累计打卡天数</div>
+          <div class="stat-bar__item">
+            <div class="stat-bar__num" data-count="${totalCheckinDays()}">0</div>
+            <div class="stat-bar__label">累计打卡</div>
           </div>
-          <div class="card">
-            <div class="stat">${favItems.length}</div>
-            <div class="stat-label">收藏的文章</div>
+          <div class="stat-bar__item">
+            <div class="stat-bar__num" data-count="${favItems.length}">0</div>
+            <div class="stat-bar__label">收藏文章</div>
           </div>
         </div>
 
@@ -90,6 +90,7 @@
       });
     }
     initReveal();
+    initCounters(root);
   }
 
   Object.assign(L5, { renderMe });

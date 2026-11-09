@@ -720,3 +720,235 @@ textarea.input {
 .ledger-row__del:hover {
   color: #d70015;
 }
+
+/* =========================================================
+   工具库：横滑轨道 / 紧凑行 / 手机底部抽屉
+   我的：紧凑统计条
+   ========================================================= */
+
+/* ---------- 首页工具横滑 ---------- */
+.tool-rail {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+@media (max-width: 768px) {
+  .tool-rail {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 78%;
+    grid-template-columns: none;
+    gap: 12px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 22px;
+    margin-inline: -22px;
+    padding-inline: 22px;
+    padding-bottom: 6px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .tool-rail::-webkit-scrollbar {
+    display: none;
+  }
+  .tool-rail > * {
+    scroll-snap-align: start;
+  }
+}
+
+/* ---------- 工具库：分组筛选条 ---------- */
+.tool-filter {
+  position: sticky;
+  top: var(--nav-h);
+  z-index: 40;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 12px 0;
+  margin-bottom: 8px;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: saturate(180%) blur(16px);
+  -webkit-backdrop-filter: saturate(180%) blur(16px);
+  scrollbar-width: none;
+}
+.tool-filter::-webkit-scrollbar {
+  display: none;
+}
+.tool-filter__item {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--bg-elevated);
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--ink-2);
+  letter-spacing: 0;
+}
+.tool-filter__item:hover {
+  text-decoration: none;
+  color: var(--ink);
+  border-color: var(--line-strong);
+}
+.tool-filter__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ch, var(--accent));
+}
+
+/* ---------- 工具库：紧凑行 ---------- */
+.tool-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+@media (max-width: 768px) {
+  .tool-list {
+    grid-template-columns: 1fr;
+  }
+}
+.tool-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: var(--bg-elevated);
+  text-align: left;
+  transition: transform 0.2s var(--ease), border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
+}
+.tool-row:hover {
+  transform: translateY(-2px);
+  border-color: var(--line-strong);
+  box-shadow: var(--shadow-sm);
+}
+.tool-row:active {
+  transform: scale(0.99);
+}
+.tool-row__dot {
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
+  display: grid;
+  place-items: center;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--chd, var(--ch));
+  background: color-mix(in srgb, var(--ch) 14%, transparent);
+}
+.tool-row__text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.tool-row__text b {
+  font-size: 15.5px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+.tool-row__text span {
+  font-size: 13px;
+  color: var(--ink-3);
+  letter-spacing: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tool-row__chev {
+  flex: 0 0 auto;
+  color: var(--ink-3);
+  font-size: 18px;
+}
+
+/* ---------- 工具面板：手机变成底部抽屉 ---------- */
+.tool-panel-wrap {
+  display: block;
+}
+@media (max-width: 768px) {
+  .tool-panel-wrap.is-open {
+    position: fixed;
+    inset: 0;
+    z-index: 130;
+    display: flex;
+    align-items: flex-end;
+    background: rgba(0, 0, 0, 0.38);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    animation: l5-fade 0.2s var(--ease);
+  }
+  .tool-panel-wrap.is-open .tool-panel {
+    width: 100%;
+    max-height: 88vh;
+    overflow-y: auto;
+    margin: 0;
+    border-radius: 22px 22px 0 0;
+    border-bottom: 0;
+    padding: 20px 20px calc(24px + env(safe-area-inset-bottom, 0px));
+    animation: l5-sheet 0.32s cubic-bezier(0.32, 0.72, 0, 1);
+  }
+  .tool-panel-wrap.is-open .tool-panel::before {
+    content: "";
+    display: block;
+    width: 40px;
+    height: 4px;
+    border-radius: 999px;
+    background: var(--line-strong);
+    margin: -6px auto 14px;
+  }
+}
+@keyframes l5-sheet {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+@keyframes l5-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ---------- 我的：紧凑统计条 ---------- */
+.stat-bar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  padding: 22px 8px;
+  border-radius: var(--radius);
+  background: var(--bg-elevated);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-sm);
+}
+.stat-bar__item {
+  text-align: center;
+  padding: 0 10px;
+}
+.stat-bar__item + .stat-bar__item {
+  border-left: 1px solid var(--line);
+}
+.stat-bar__num {
+  font-size: clamp(28px, 7vw, 38px);
+  font-weight: 650;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+  font-variant-numeric: tabular-nums;
+}
+.stat-bar__label {
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--ink-3);
+  letter-spacing: 0;
+}
+
+@media (min-width: 1024px) {
+  .tool-list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

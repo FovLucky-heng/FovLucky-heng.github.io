@@ -9,10 +9,11 @@
   padding: 0 22px;
 }
 .section {
-  padding: 76px 0;
+  /* 用 padding-block 而不是 padding，避免覆盖同一元素上 .wrap 的横向内边距 */
+  padding-block: 76px;
 }
 .section--tight {
-  padding: 44px 0;
+  padding-block: 44px;
 }
 .section--subtle {
   background: var(--bg-subtle);
@@ -223,7 +224,7 @@
     display: none;
   }
   .section {
-    padding: 52px 0;
+    padding-block: 52px;
   }
   .hero {
     padding: 60px 0 52px;
@@ -237,4 +238,19 @@
   .card--pad-lg {
     padding: 22px;
   }
+}
+
+/* ---------- 阅读进度条 ---------- */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: left center;
+  background: linear-gradient(90deg, #7c9a76, #7591ac 40%, #d9803f 72%, #b08f3c);
+  z-index: 100;
+  pointer-events: none;
+  transition: transform 0.1s linear;
 }

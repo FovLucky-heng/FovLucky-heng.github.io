@@ -37,6 +37,37 @@ export function channelCard(c, delay = 0) {
         </a>`;
 }
 
+/** 首页的「线路图」：五个站点串成一条线，是整站最有记忆点的部分 */
+export function routeStops(channels) {
+  return channels
+    .map(
+      (c, i) => `<li class="route__stop" style="--ch:${c.color};--chd:${c.deep};--i:${i}">
+          <a class="route__link" href="/${c.id}.html">
+            <span class="route__dot" aria-hidden="true">${esc(c.icon)}</span>
+            <span class="route__body">
+              <span class="route__line-no">${esc(c.line)}</span>
+              <span class="route__name">${esc(c.name)}</span>
+              <span class="route__claim">${esc(c.claim)}</span>
+              <span class="route__meta">${esc(c.card)}</span>
+            </span>
+          </a>
+        </li>`
+    )
+    .join("\n        ");
+}
+
+/** 工具库里的紧凑行（手机上比大卡片好扫） */
+export function toolRow(ch, tool) {
+  return `<button class="tool-row" type="button" data-tool="${tool.id}" style="--ch:${ch.color};--chd:${ch.deep}">
+          <span class="tool-row__dot" aria-hidden="true">${esc(ch.icon)}</span>
+          <span class="tool-row__text">
+            <b>${esc(tool.name)}</b>
+            <span>${esc(tool.desc)}</span>
+          </span>
+          <span class="tool-row__chev" aria-hidden="true">›</span>
+        </button>`;
+}
+
 export function articleCard(a, { channel, attrs = "" } = {}) {
   return `<a class="article-card reveal" href="/article/${a.slug}.html"${attrs} style="--ch:${channel.color};--chd:${channel.deep}">
           <span class="article-card__tag">${esc(a.tag)}</span>
