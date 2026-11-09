@@ -2,10 +2,14 @@
    utilities.css — 动画、无障碍与工具类
    ========================================================= */
 /* ---------- 24. Reveal animation ---------- */
+/* 默认可见：只有 JS 真正跑起来（html 上有 l5-js）才启用"先隐藏再进场"，
+   否则禁用 JS / 脚本报错时，整页内容会全部不可见 */
 .reveal {
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+}
+.l5-js .reveal:not(.is-in) {
   opacity: 0;
   transform: translateY(18px);
-  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
 }
 .reveal.is-in {
   opacity: 1;

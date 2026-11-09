@@ -7,11 +7,11 @@
   function itemsHTML() {
     return DAILY.map((d) => {
       const ch = channelOf(d.channel);
-      return `<button class="daily__item" data-daily="${d.id}" aria-pressed="false" style="--ch:${ch.color}">
+      return `<button class="daily__item" data-daily="${d.id}" aria-pressed="false" aria-label="${esc(
+        ch.name
+      )}：${esc(d.text)}" style="--ch:${ch.color}">
         <span class="daily__check" aria-hidden="true">✓</span>
-        <span class="daily__text">
-          <span class="daily__tag">${esc(ch.name)}</span>${esc(d.text)}
-        </span>
+        <span class="daily__text"><span class="daily__dot" aria-hidden="true"></span>${esc(d.text)}</span>
       </button>`;
     }).join("");
   }

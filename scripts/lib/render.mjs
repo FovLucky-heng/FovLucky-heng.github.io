@@ -74,7 +74,7 @@ export function articleCard(a, { channel, attrs = "" } = {}) {
           <span class="article-card__title">${esc(a.title)}</span>
           <span class="article-card__excerpt">${esc(a.excerpt)}</span>
           <span class="article-card__meta">
-            <span>${esc(channel.name)}</span><span>·</span><span>${a.minutes} 分钟阅读</span>
+            <span>${a.minutes} 分钟阅读</span>
           </span>
         </a>`;
 }
@@ -92,11 +92,12 @@ export function toolCard(ch, tool, { link = true, showChannel = true } = {}) {
 }
 
 export function dailyItem(item, channel) {
-  return `<button class="daily__item" type="button" data-daily="${item.id}" aria-pressed="false" style="--ch:${channel.color}">
+  /* 栏目名只在 aria-label 里出现，视觉上用色点区分，避免整页重复五个名字 */
+  return `<button class="daily__item" type="button" data-daily="${item.id}" aria-pressed="false" aria-label="${esc(
+    channel.name
+  )}：${esc(item.text)}" style="--ch:${channel.color}">
           <span class="daily__check" aria-hidden="true">✓</span>
-          <span class="daily__text">
-            <span class="daily__tag">${esc(channel.name)}</span>${esc(item.text)}
-          </span>
+          <span class="daily__text"><span class="daily__dot" aria-hidden="true"></span>${esc(item.text)}</span>
         </button>`;
 }
 

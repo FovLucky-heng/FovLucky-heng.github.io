@@ -225,7 +225,7 @@ function buildHome() {
     .map((id) => {
       const ch = data.channels.find((c) => c.tools.some((t) => t.id === id));
       const tool = ch.tools.find((t) => t.id === id);
-      return toolCard(ch, tool);
+      return toolCard(ch, tool, { showChannel: false });
     })
     .join("\n        ");
 

@@ -238,6 +238,22 @@ for (const dir of moduleDirs) {
 }
 check("模块引用的 L5 API 都已解构", unresolved.length === 0, unresolved.slice(0, 4).join(" | "));
 
+
+/* ---------- 11. 首页不要重复刷同一批栏目名 ---------- */
+const homeHtml = pageOf("index.html");
+const homeText = homeHtml
+  .replace(/<script[\s\S]*?<\/script>/g, " ")
+  .replace(/<style[\s\S]*?<\/style>/g, " ")
+  .replace(/<[^>]+>/g, " ")
+  .replace(/\s+/g, " ");
+const channelNames = ["健康吃", "随心穿", "不蕉绿", "开心练", "智慧投"];
+const repeats = channelNames.map((n) => [n, (homeText.match(new RegExp(n, "g")) || []).length]);
+const worst = repeats.reduce((a, b) => (b[1] > a[1] ? b : a));
+check(
+  "首页栏目名重复不超过 4 次（导航/线路图/筛选/页脚）",
+  worst[1] <= 4,
+  repeats.map(([n, c]) => `${n}:${c}`).join(" ")
+);
 /* ---------- 汇总 ---------- */
 console.log(`\n构建检查：通过 ${pass}，失败 ${failures.length}`);
 if (failures.length) {

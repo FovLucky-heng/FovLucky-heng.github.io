@@ -336,6 +336,13 @@ check("无 JS 时首页仍有内容", noJs.includes("今天想从哪一站上车
 check("无 JS 时文章卡仍在", (await evaluate(`document.querySelectorAll('#latestGrid .article-card').length`)) === 20);
 await goto("/article/eat-10min.html");
 check("无 JS 时文章正文可读", (await evaluate(`document.querySelector('main').textContent`)).includes("快手菜的关键不是"));
+await goto("/index.html");
+check("无 JS 时内容真实可见（不是只有 DOM）", (await evaluate(`
+  Array.from(document.querySelectorAll(".reveal")).every((el) => Number(getComputedStyle(el).opacity) > 0.95)
+`)));
+check("无 JS 时工具卡可见", (await evaluate(`
+  Array.from(document.querySelectorAll(".tool-card")).every((el) => Number(getComputedStyle(el).opacity) > 0.95)
+`)));
 await send("Emulation.setScriptExecutionDisabled", { value: false });
 
 

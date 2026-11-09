@@ -952,3 +952,17 @@ textarea.input {
     grid-template-columns: repeat(3, 1fr);
   }
 }
+
+/* 每日小事：用色点代替栏目名（栏目标签已在 aria-label 里） */
+.daily__text {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.daily__dot {
+  flex: 0 0 auto;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ch, var(--accent));
+}
