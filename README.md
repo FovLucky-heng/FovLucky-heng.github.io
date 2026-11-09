@@ -2,6 +2,10 @@
 
 把生活，调回喜欢的频道。一个轻量的生活方式成长网站：**健康吃 · 随心穿 · 不蕉绿 · 开心练 · 智慧投**。
 
+[![Deploy](https://github.com/FovLucky-heng/life-line-5/actions/workflows/deploy.yml/badge.svg)](https://github.com/FovLucky-heng/life-line-5/actions/workflows/deploy.yml)
+
+**线上：<https://fovlucky-heng.github.io/life-line-5/>**
+
 静态站点，零运行时依赖、零框架。源码在 `src/`，构建产物在 `dist/`，构建脚本只用 Node 内置模块。
 
 ---
