@@ -162,38 +162,38 @@ await send("Emulation.setDeviceMetricsOverride", {
   mobile: false
 });
 
+/* 预热一次：首次打开页面时 Chrome 还要初始化 JS 与字体，容易让首个断言抢跑 */
+await goto("/index.html");
+await sleep(600);
+
 /* ================= 首页 ================= */
 await goto("/index.html");
 check("首页 5 个线路站点", (await evaluate(`document.querySelectorAll('.route__stop').length`)) === 5);
-check("首页 20 张文章卡（预渲染）", (await evaluate(`document.querySelectorAll('#latestGrid .article-card').length`)) === 20);
-check("首页 5 个工具卡", (await evaluate(`document.querySelectorAll('.tool-card').length`)) === 5);
-check("首页 5 件小事", (await evaluate(`document.querySelectorAll('#dailyList [data-daily]').length`)) === 5);
-check("首页内容不依赖 JS（已在 HTML 中）", (await evaluate(`document.querySelector('#latestGrid').children.length > 0`)));
+check("首页刊头显示日期", (await evaluate(`document.querySelector('#todayDate').textContent`)).length > 4);
+check("首页只有一条建议任务", (await evaluate(`document.querySelectorAll('#suggestText').length`)) === 1 &&
+  (await evaluate(`document.querySelector('#suggestText').textContent.length`)) > 2);
+check("首页没有重复的卡片网格", (await evaluate(`document.querySelectorAll('#latestGrid, .tool-rail, .tool-card').length`)) === 0);
+check("首页三条速览来自不同线路", (await evaluate(`
+  (() => {
+    const tags = Array.from(document.querySelectorAll('.latest-row')).map((r) => r.style.getPropertyValue('--ch'));
+    return new Set(tags).size === 3;
+  })()
+`)));
+check("首页今日一条有标题与链接", (await evaluate(`document.querySelector('#featureTitle').textContent`)).length > 4 &&
+  (await evaluate(`document.querySelector('#featureLink').getAttribute('href')`)).startsWith("article/"));
 
-// 打卡
-await evaluate(`document.querySelector('[data-daily="eat"]').click()`);
-await sleep(150);
-check("打卡按钮状态更新", (await evaluate(`document.querySelector('[data-daily="eat"]').getAttribute('aria-pressed')`)) === "true");
-check("进度文案 1/5", (await evaluate(`document.querySelector('#dailyProgress').textContent`)).includes("1/5"));
-check("打卡写入 localStorage", (await evaluate(`localStorage.getItem('l5.daily')`)).includes("eat"));
+// 换一条
+const firstFeature = await evaluate(`document.querySelector('#featureTitle').textContent`);
+await evaluate(`document.querySelector('#featureNext').click()`);
+await sleep(300);
+check("今日一条可换一条", (await evaluate(`document.querySelector('#featureTitle').textContent`)) !== firstFeature);
 
-// 筛选
-await evaluate(`document.querySelector('[data-filter="mind"]').click()`);
+// 建议任务打卡
+await evaluate(`document.querySelector('#suggestDo').click()`);
 await sleep(200);
-check("筛选「不蕉绿」只剩 4 张", (await evaluate(`document.querySelectorAll('#latestGrid .article-card:not([hidden])').length`)) === 4);
-check("筛选后卡片可见（不是透明）", (await evaluate(`getComputedStyle(document.querySelector('#latestGrid .article-card:not([hidden])')).opacity`)) === "1");
-await evaluate(`document.querySelector('[data-filter="all"]').click()`);
-await sleep(150);
-check("筛选「全部」回到默认 8 张", (await evaluate(`document.querySelectorAll('#latestGrid .article-card:not([hidden])').length`)) === 8);
-
-// 展开 / 收起
-await evaluate(`document.querySelector('#latestMore').click()`);
-await sleep(220);
-check("查看全部展开到 20 篇", (await evaluate(`document.querySelectorAll('#latestGrid .article-card:not([hidden])').length`)) === 20);
-check("按钮切换为收起", (await evaluate(`document.querySelector('#latestMore').textContent`)).includes("收起"));
-await evaluate(`document.querySelector('#latestMore').click()`);
-await sleep(180);
-check("收起后回到 8 篇", (await evaluate(`document.querySelectorAll('#latestGrid .article-card:not([hidden])').length`)) === 8);
+check("建议任务可打卡", (await evaluate(`document.querySelector('#suggestDo').getAttribute('aria-pressed')`)) === "true");
+check("打卡写入 localStorage", (await evaluate(`localStorage.getItem('l5.daily')`)) !== null);
+check("打卡后统计数字更新", (await evaluate(`Number(document.querySelector('#totalNum').dataset.count)`)) >= 1);
 
 /* ================= 五个栏目页 ================= */
 const channels = [
@@ -333,15 +333,15 @@ await send("Emulation.setScriptExecutionDisabled", { value: true });
 await goto("/index.html");
 const noJs = await evaluate(`document.body.textContent`);
 check("无 JS 时首页仍有内容", noJs.includes("今天想从哪一站上车") && noJs.includes("健康吃"));
-check("无 JS 时文章卡仍在", (await evaluate(`document.querySelectorAll('#latestGrid .article-card').length`)) === 20);
+check("无 JS 时三条速览仍在", (await evaluate(`document.querySelectorAll('.latest-row').length`)) === 3);
 await goto("/article/eat-10min.html");
 check("无 JS 时文章正文可读", (await evaluate(`document.querySelector('main').textContent`)).includes("快手菜的关键不是"));
 await goto("/index.html");
 check("无 JS 时内容真实可见（不是只有 DOM）", (await evaluate(`
   Array.from(document.querySelectorAll(".reveal")).every((el) => Number(getComputedStyle(el).opacity) > 0.95)
 `)));
-check("无 JS 时工具卡可见", (await evaluate(`
-  Array.from(document.querySelectorAll(".tool-card")).every((el) => Number(getComputedStyle(el).opacity) > 0.95)
+check("无 JS 时今日一条可见", (await evaluate(`
+  Number(getComputedStyle(document.querySelector(".feature")).opacity) > 0.95
 `)));
 await send("Emulation.setScriptExecutionDisabled", { value: false });
 
@@ -352,9 +352,12 @@ await goto("/index.html");
 check("线路图有连线和站点", (await evaluate(`document.querySelectorAll('.route__stop').length`)) === 5 &&
   (await evaluate(`getComputedStyle(document.querySelector('.route'), '::before').transform !== 'none'`)));
 await sleep(1000); // 站点圆点有错峰延迟（--i × 90ms），等动画结束再断言
+await evaluate(`document.querySelector('.route').scrollIntoView({ block: 'center' })`);
+await sleep(1200);
 check("线路图站点进入后可见", (await evaluate(`Array.from(document.querySelectorAll('.route__dot')).every(d => Number(getComputedStyle(d).opacity) > 0.9)`)));
-check("编号眉标存在", (await evaluate(`document.querySelectorAll('.eyebrow__num').length`)) === 4);
-check("工具区是横滑轨道", (await evaluate(`!!document.querySelector('.tool-rail')`)));
+await evaluate(`window.scrollTo(0, 0)`);
+check("编号眉标存在", (await evaluate(`document.querySelectorAll('.eyebrow__num').length`)) === 2);
+check("首页不再有工具横滑区（交给工具页）", (await evaluate(`!document.querySelector('.tool-rail')`)));
 check("阅读进度条已注入", (await evaluate(`!!document.querySelector('.scroll-progress')`)));
 
 /* 我的：计数从 0 滚到目标 */

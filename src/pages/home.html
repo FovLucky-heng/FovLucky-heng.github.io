@@ -6,20 +6,41 @@
     <span class="orb orb--3"></span>
   </div>
   <div class="wrap">
-    <p class="hero__kicker">五维生活实验室</p>
+    <p class="masthead">五维生活实验室 <span class="masthead__dot">·</span> <span id="todayDate">{{todayDate}}</span></p>
     <h1 class="hero__title">把生活，<br />调回<em>喜欢的频道</em></h1>
-    <p class="hero__sub">每天五个小动作，慢慢把生活握回自己手里。
-不追求满分，只练习刚刚好的掌控感。</p>
+    <p class="hero__sub">每天五个小动作，慢慢把生活握回自己手里。</p>
     <div class="hero__actions">
       <a class="btn btn--primary" href="/checkin.html">开始今日打卡</a>
       <a class="btn btn--ghost" href="#channels">逛逛五号线</a>
     </div>
-
   </div>
-  <a class="hero__cue" href="#channels" aria-label="向下浏览">
-    <span aria-hidden="true">↓</span>
-  </a>
 </header>
+
+<section class="section band-today" id="today">
+  <div class="wrap">
+    <div class="today-card reveal">
+      <div class="today-card__body">
+        <span class="eyebrow">今天先做这一件</span>
+        <h2 class="today-card__title" id="suggestText">{{suggestText}}</h2>
+        <p class="today-card__desc">做完就算今天没白过。想多做几件，去打卡页。</p>
+        <div class="row mt-16">
+          <button class="btn btn--accent btn--sm" type="button" id="suggestDo" aria-pressed="false">我做了</button>
+          <a class="btn btn--quiet" href="/checkin.html">全部五件 ›</a>
+        </div>
+      </div>
+      <div class="today-card__side">
+        <div class="mini-stat">
+          <b data-count="0" id="streakNum">0</b>
+          <span>连续打卡</span>
+        </div>
+        <div class="mini-stat">
+          <b data-count="0" id="totalNum">0</b>
+          <span>累计天数</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <section class="section section--route" id="channels">
   <div class="wrap">
@@ -34,21 +55,16 @@
   </div>
 </section>
 
-<section class="section daily-band">
+<section class="section band-feature">
   <div class="wrap">
-    <div class="daily-band__inner">
-      <div class="section-head reveal">
-        <span class="eyebrow"><b class="eyebrow__num">02</b>每天</span>
-        <h2 class="h-section">今日五件小事</h2>
-        <p class="sub-section">不用全做，挑一件也算今天没白过。</p>
-      </div>
-      <div class="daily" id="dailyList">
-{{dailyItems}}
-      </div>
-      <div class="daily__progress" id="dailyProgress"></div>
-      <div class="row mt-24">
-        <a class="btn btn--ghost" href="/checkin.html">去打卡</a>
-        <a class="btn btn--quiet" href="/me.html">看看我的记录 ›</a>
+    <div class="feature reveal" id="feature" style="--ch:{{featureColor}};--chd:{{featureDeep}}">
+      <div class="feature__label">今日一条 <span aria-hidden="true">·</span> <span id="featureChannel">{{featureChannel}}</span></div>
+      <h2 class="feature__title" id="featureTitle">{{featureTitle}}</h2>
+      <p class="feature__excerpt" id="featureExcerpt">{{featureExcerpt}}</p>
+      <div class="row mt-16">
+        <a class="btn btn--primary btn--sm" id="featureLink" href="/article/{{featureSlug}}.html">读这一篇</a>
+        <button class="btn btn--ghost btn--sm" type="button" id="featureNext">换一条</button>
+        <span class="hint" id="featureHint">每天换一篇</span>
       </div>
     </div>
   </div>
@@ -57,33 +73,15 @@
 <section class="section">
   <div class="wrap">
     <div class="section-head reveal">
-      <span class="eyebrow"><b class="eyebrow__num">03</b>工具</span>
-      <h2 class="h-section">顺手能用的小工具</h2>
-      <p class="sub-section">解决“今天吃什么”“穿什么”“钱去哪了”。</p>
+      <span class="eyebrow"><b class="eyebrow__num">02</b>最近</span>
+      <h2 class="h-section">刚更新的三条</h2>
+      <p class="sub-section">想看全部内容，按线路进去翻。</p>
     </div>
-    <div class="tool-rail">
-{{tools}}
-    </div>
+    <ul class="latest-list">
+{{latestRows}}
+    </ul>
     <div class="row mt-24">
-      <a class="btn btn--ghost" href="/tools.html">进入工具库</a>
-    </div>
-  </div>
-</section>
-
-<section class="section section--subtle">
-  <div class="wrap">
-    <div class="section-head reveal">
-      <span class="eyebrow"><b class="eyebrow__num">04</b>内容</span>
-      <h2 class="h-section">最近更新</h2>
-    </div>
-    <div class="segmented" id="latestTabs" style="margin-bottom:26px">
-{{latestTabs}}
-    </div>
-    <div class="grid-3" id="latestGrid">
-{{latestCards}}
-    </div>
-    <div class="row mt-24">
-      <button class="btn btn--ghost" type="button" id="latestMore" aria-expanded="false">查看全部 {{totalArticles}} 篇</button>
+      <a class="btn btn--ghost" href="/eat.html">按线路浏览</a>
     </div>
   </div>
 </section>

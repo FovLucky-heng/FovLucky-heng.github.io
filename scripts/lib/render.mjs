@@ -68,6 +68,17 @@ export function toolRow(ch, tool) {
         </button>`;
 }
 
+/** 首页「刚更新的三条」：纯文字行，和栏目页的卡片网格区分开 */
+export function latestRow(a, ch) {
+  return `<li class="latest-row" style="--ch:${ch.color};--chd:${ch.deep}">
+          <a class="latest-row__link" href="/article/${a.slug}.html">
+            <span class="latest-row__tag">${esc(a.tag)}</span>
+            <span class="latest-row__title">${esc(a.title)}</span>
+            <span class="latest-row__chev" aria-hidden="true">›</span>
+          </a>
+        </li>`;
+}
+
 export function articleCard(a, { channel, attrs = "" } = {}) {
   return `<a class="article-card reveal" href="/article/${a.slug}.html"${attrs} style="--ch:${channel.color};--chd:${channel.deep}">
           <span class="article-card__tag">${esc(a.tag)}</span>

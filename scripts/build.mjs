@@ -22,6 +22,7 @@ import {
   channelCard,
   routeStops,
   toolRow,
+  latestRow,
   articleCard,
   toolCard,
   dailyItem,
@@ -220,34 +221,40 @@ function shell({ url, out, page, bodyAttrs = "", main, scripts = [], ...meta }) 
 
 /* ---------- 首页 ---------- */
 function buildHome() {
-  const featured = ["recipe", "wardrobe", "breath", "challenge", "budget"];
-  const toolsHTML = featured
-    .map((id) => {
-      const ch = data.channels.find((c) => c.tools.some((t) => t.id === id));
-      const tool = ch.tools.find((t) => t.id === id);
-      return toolCard(ch, tool, { showChannel: false });
-    })
-    .join("\n        ");
+  /* 今日一条：按建站日期取一篇，同一天多次构建结果一致；
+     运行时会按访问者本地日期重新挑一篇（见 pages/home.js） */
+  const dayIndex = Math.floor(Date.now() / 86400000);
+  const feature = data.allArticles[dayIndex % data.allArticles.length];
+  const featureChannel = feature.channel;
 
-  const latestTabs = segmented(
-    [{ id: "all", name: "全部" }, ...data.channels.map((c) => ({ id: c.id, name: c.name }))]
-  );
+  /* 今天先做这一件：从五件小事里按日期挑一条 */
+  const suggestion = data.daily[dayIndex % data.daily.length];
 
-  const latestCards = data.allArticles
-    .map((a) => articleCard(a, { channel: a.channel, attrs: ` data-channel="${a.channel.id}"` }))
-    .join("\n        ");
+  /* 刚更新的三条：保证来自三条不同线路，按日期轮换起点，避免整块都是同一个栏目 */
+  const start = dayIndex % data.channels.length;
+  const latestThree = [0, 1, 2].map((i) => {
+    const c = data.channels[(start + i) % data.channels.length];
+    return { ...c.articles[c.articles.length - 1], channel: c };
+  });
+
+  const now = new Date();
+  const todayDate = `${now.getMonth() + 1} 月 ${now.getDate()} 日 · ${"日一二三四五六"[now.getDay()] === "日" ? "周日" : "周" + "日一二三四五六"[now.getDay()]}`;
 
   const main = render(
     template("home.html"),
     {
       routeStops: routeStops(data.channels),
-      dailyItems: data.daily
-        .map((d) => dailyItem(d, channelById[d.channel]))
+      latestRows: latestThree
+        .map((a) => latestRow(a, a.channel))
         .join("\n        "),
-      tools: toolsHTML,
-      latestTabs,
-      latestCards,
-      totalArticles: String(data.allArticles.length)
+      todayDate,
+      suggestText: suggestion.text,
+      featureSlug: feature.slug,
+      featureTitle: feature.title,
+      featureExcerpt: feature.excerpt,
+      featureChannel: featureChannel.name,
+      featureColor: featureChannel.color,
+      featureDeep: featureChannel.deep
     },
     "home"
   );
