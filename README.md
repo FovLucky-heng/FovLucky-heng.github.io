@@ -149,7 +149,7 @@ main.js             按 body[data-page] 调 L5.pages[page]
 一次构建（约 200ms）：
 
 ```text
-31 个页面（首页 1 + 栏目 5 + 文章 20 + 工具 / 打卡 / 我的 / 关于 / 404）
+78 个页面（首页 1 + 栏目 5 + 文章 40 + 标签 25 + 标签索引 / 搜索 + 工具 / 打卡 / 我的 / 关于 / 404）
 9 个 JS bundle：data / core / home / channel / article / tools / checkin / me / main
 1 个 CSS（6 个 @layer 合并）
 sitemap.xml · robots.txt · favicon

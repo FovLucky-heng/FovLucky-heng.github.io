@@ -1,0 +1,19 @@
+<header class="channel-hero" style="--ch:{{color}};--chd:{{deep}}">
+  <div class="wrap">
+    <span class="channel-hero__line">标签</span>
+    <h1 class="channel-hero__title">{{tagName}}</h1>
+    <p class="channel-hero__desc">{{tagDesc}}</p>
+    <div class="chip-row mt-16">
+      <span class="chip" style="--accent:{{deep}}">{{count}} 篇</span>
+      <a class="btn btn--quiet" href="/tags.html">全部标签 ›</a>
+    </div>
+  </div>
+</header>
+
+<section class="section section--tight">
+  <div class="wrap">
+    <div class="grid-3">
+{{cards}}
+    </div>
+  </div>
+</section>

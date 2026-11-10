@@ -209,12 +209,12 @@ for (const [id, name] of channels) {
   const arts = await evaluate(`document.querySelectorAll('#channelArticles .article-card').length`);
   const tags = await evaluate(`document.querySelectorAll('#channelTags [data-tag]').length`);
   const tools = await evaluate(`document.querySelectorAll('.tool-card').length`);
-  check(`${name} 页渲染完整`, !!title && arts === 4 && tags === 6 && tools === 3, `arts=${arts} tags=${tags} tools=${tools}`);
+  check(`${name} 页渲染完整`, !!title && arts === 8 && tags === 6 && tools === 3, `arts=${arts} tags=${tags} tools=${tools}`);
 
   await evaluate(`document.querySelectorAll('#channelTags [data-tag]')[2].click()`);
   await sleep(150);
   const visible = await evaluate(`document.querySelectorAll('#channelArticles .article-card:not([hidden])').length`);
-  check(`${name} 分类筛选生效`, visible >= 1 && visible <= 4, `visible=${visible}`);
+  check(`${name} 分类筛选生效`, visible >= 1 && visible <= 8, `visible=${visible}`);
 
   if (id === "wear") {
     await evaluate(`document.querySelector('[data-action]').click()`);
@@ -410,6 +410,24 @@ check("减少动效：首页内容可见", (await evaluate(`document.querySelect
   (await evaluate(`Array.from(document.querySelectorAll('.route__dot')).every(d => Number(getComputedStyle(d).opacity) > 0.9)`)));
 check("减少动效：不注入进度条", (await evaluate(`!document.querySelector('.scroll-progress')`)));
 await send("Emulation.setEmulatedMedia", { features: [{ name: "prefers-reduced-motion", value: "no-preference" }] });
+/* ================= 标签页与搜索 ================= */
+await goto("/tags.html");
+check("标签索引列出全部标签", (await evaluate(`document.querySelectorAll('.tag-chip').length`)) === 25);
+
+await goto("/tag/quick-cook.html");
+check("标签页展示该标签文章", (await evaluate(`document.querySelectorAll('a.article-card').length`)) >= 2);
+check("标签页标题正确", (await evaluate(`document.querySelector('.channel-hero__title').textContent`)) === "快手菜");
+
+await goto("/search.html");
+check("搜索页有输入框", (await evaluate(`!!document.querySelector('#searchInput')`)));
+await evaluate(`(() => { const i = document.querySelector('#searchInput'); i.value = "拉伸"; i.dispatchEvent(new Event("input")); })()`);
+await sleep(400);
+check("搜索命中结果", (await evaluate(`document.querySelectorAll('#searchResults .article-card').length`)) >= 1);
+check("搜索提示更新", (await evaluate(`document.querySelector('#searchHint').textContent`)).includes("找到"));
+
+await evaluate(`(() => { const i = document.querySelector('#searchInput'); i.value = "zzzz不存在"; i.dispatchEvent(new Event("input")); })()`);
+await sleep(400);
+check("无结果时有提示", (await evaluate(`document.querySelector('#searchHint').textContent`)).includes("没有找到"));
 /* ================= 汇总 ================= */
 const uniqueErrors = [...new Set(errors)].filter((e) => !e.includes("no-such-page"));
 check("运行时零错误", uniqueErrors.length === 0, uniqueErrors.slice(0, 3).join(" | "));

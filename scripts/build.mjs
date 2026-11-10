@@ -56,12 +56,13 @@ function loadData() {
 
   run("data/site.js");
   run("data/channels.js");
+  run("data/tags.js");
   const dir = join(SRC, "data", "articles");
   for (const f of readdirSync(dir).filter((f) => f.endsWith(".js"))) {
     run(`data/articles/${f}`);
   }
 
-  const { L5_SITE, L5_CHANNELS, L5_ARTICLES } = sandbox.window;
+  const { L5_SITE, L5_CHANNELS, L5_ARTICLES, L5_TAGS } = sandbox.window;
   const channels = L5_CHANNELS.map((c) => ({
     ...c,
     articles: L5_ARTICLES[c.id] || []
@@ -72,6 +73,7 @@ function loadData() {
     daily: L5_SITE.DAILY,
     moods: L5_SITE.MOODS,
     channels,
+    tags: L5_TAGS || {},
     allArticles: channels.flatMap((c) =>
       c.articles.map((a) => ({ ...a, channel: c }))
     )
@@ -120,6 +122,7 @@ const BUNDLES = {
   "article.js": ["pages/article.js"],
   "checkin.js": ["pages/checkin.js"],
   "me.js": ["pages/me.js"],
+  "search.js": ["pages/search.js"],
   "tools.js": [
     "tools/shared.js",
     "tools/index.js",
@@ -156,6 +159,19 @@ function buildScripts() {
     null,
     2
   )};\n`;
+
+  /* 搜索索引：只放检索需要的字段，避免把正文塞进来 */
+  const index = data.allArticles.map((a) => ({
+    s: a.slug,
+    t: a.title,
+    g: a.tag,
+    c: a.channel.name,
+    ci: a.channel.id,
+    e: a.excerpt
+  }));
+  out["search-index.js"] = `/* 构建生成：搜索索引 */
+window.L5_SEARCH_INDEX = ${JSON.stringify(index)};\n`;
+
   return out;
 }
 
@@ -184,7 +200,8 @@ function shell({ url, out, page, bodyAttrs = "", main, scripts = [], ...meta }) 
     `head:${out}`
   );
 
-  const scriptTags = ["data.js", "core.js", ...scripts, "main.js"]
+  const scriptTags = [meta.before || [], "data.js", ...(meta.pre || []), "core.js", ...scripts, "main.js"]
+    .flat()
     .map((f) => `<script src="/assets/js/${f}" defer></script>`)
     .join("\n");
 
@@ -366,6 +383,92 @@ function buildArticles() {
   }
 }
 
+/* ---------- 标签归档页 + 标签索引 + 搜索 ---------- */
+function slugOfTag(tag) {
+  return data.tags[tag] || encodeURIComponent(tag);
+}
+
+function buildTags() {
+  /* 标签 → 文章（可跨栏目） */
+  const byTag = new Map();
+  for (const a of data.allArticles) {
+    if (!byTag.has(a.tag)) byTag.set(a.tag, []);
+    byTag.get(a.tag).push(a);
+  }
+
+  const entries = [...byTag.entries()].sort((a, b) => b[1].length - a[1].length);
+
+  for (const [tag, list] of entries) {
+    const first = list[0].channel;
+    const main = render(
+      template("tag.html"),
+      {
+        color: first.color,
+        deep: first.deep,
+        tagName: esc(tag),
+        tagDesc: `「${esc(tag)}」相关的 ${list.length} 篇内容。`,
+        count: String(list.length),
+        cards: list
+          .map((a) => articleCard({ ...a, channel: a.channel }, { channel: a.channel }))
+          .join("\n        ")
+      },
+      `tag:${tag}`
+    );
+
+    shell({
+      url: `/tag/${slugOfTag(tag)}.html`,
+      out: `tag/${slugOfTag(tag)}.html`,
+      page: "tag",
+      main,
+      scripts: [],
+      title: `${tag} · ${site.name}`,
+      description: `「${tag}」主题下的 ${list.length} 篇内容：${list
+        .slice(0, 3)
+        .map((a) => a.title)
+        .join("、")}。`
+    });
+  }
+
+  /* 标签索引 */
+  const cloud = entries
+    .map(([tag, list]) => {
+      const c = list[0].channel;
+      return `<a class="tag-chip" href="/tag/${slugOfTag(tag)}.html" style="--ch:${c.color};--chd:${c.deep}">
+        ${esc(tag)}<span class="tag-chip__count">${list.length}</span>
+      </a>`;
+    })
+    .join("\n    ");
+
+  shell({
+    url: "/tags.html",
+    out: "tags.html",
+    page: "tags",
+    main: render(template("tags.html"), { tagCloud: cloud }, "tags"),
+    scripts: [],
+    title: `全部标签 · ${site.name}`,
+    description: `按主题浏览：${entries
+      .slice(0, 8)
+      .map(([t]) => t)
+      .join("、")} 等 ${entries.length} 个标签。`
+  });
+
+  /* 搜索 */
+  shell({
+    url: "/search.html",
+    out: "search.html",
+    page: "search",
+    main: render(
+      template("search.html"),
+      { count: String(data.allArticles.length) },
+      "search"
+    ),
+    scripts: ["search.js"],
+    pre: ["search-index.js"],
+    title: `搜索 · ${site.name}`,
+    description: `在 ${data.allArticles.length} 篇内容里搜索标题、摘要与标签。`
+  });
+}
+
 /* ---------- 工具库 ---------- */
 function buildTools() {
   const filter = `<div class="tool-filter">
@@ -509,6 +612,7 @@ function build() {
   buildHome();
   buildChannels();
   buildArticles();
+  buildTags();
   buildTools();
   buildSimplePages();
   buildAssets();

@@ -58,7 +58,7 @@ const missingChannels = channels.filter((c) => !htmlFiles.includes(`${c}.html`))
 check("5 个栏目页存在", missingChannels.length === 0, missingChannels.join(","));
 
 const articlePages = htmlFiles.filter((f) => f.startsWith("article/"));
-check("预渲染文章页 20 篇", articlePages.length === 20, `实际 ${articlePages.length}`);
+check("预渲染文章页 40 篇", articlePages.length === 40, `实际 ${articlePages.length}`);
 
 /* ---------- 4. 无残留占位符 ---------- */
 const leftover = htmlFiles.filter((f) => /\{\{\w+\}\}/.test(pageOf(f)));
@@ -161,7 +161,7 @@ check("存在 favicon", files.includes("assets/favicon.svg"));
 /* ---------- 8. SEO 产物 ---------- */
 const sitemap = readFileSync(join(DIST, "sitemap.xml"), "utf8");
 const sitemapUrls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
-check("sitemap 收录 30 个 URL", sitemapUrls.length === 30, `实际 ${sitemapUrls.length}`);
+check("sitemap 收录 77 个 URL", sitemapUrls.length === 77, `实际 ${sitemapUrls.length}`);
 check("sitemap 不含 404", !sitemapUrls.some((u) => u.endsWith("/404.html")));
 
 const robots = readFileSync(join(DIST, "robots.txt"), "utf8");

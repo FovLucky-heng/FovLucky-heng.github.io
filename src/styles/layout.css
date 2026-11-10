@@ -258,3 +258,10 @@
   pointer-events: none;
   transition: transform 0.1s linear;
 }
+
+/* 导航里的图标入口（搜索） */
+.nav__link--icon {
+  font-size: 17px;
+  line-height: 1;
+  padding: 0 2px;
+}
